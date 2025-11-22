@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # This ensures the frontend build uses the correct API URL for the backend service
+        REACT_APP_API_URL: http://localhost:5001/api
+    ports:
+      - "3000:80" # Map host port 3000 to container port 80 (Nginx)
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5001" # Map host port 5001 to container port 5001
+    environment:
+      # Ensure these match your needs. For production, consider using an .env file
+      # and uncommenting the env_file line below.
+      NODE_ENV: production
+      PORT: 5001
+      MONGO_URI: mongodb://mongodb:27017/wineApp # 'mongodb' is the service name of the MongoDB container
+      # Add any other backend environment variables here
+    # env_file:
+    #   - ./backend/.env # If you have a .env file in your backend directory
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:6.0 # Or mongo:latest, or a specific version you prefer
+    ports:
+      - "27017:27017" # Expose MongoDB port to host (optional, for direct access/debugging)
+    volumes:
+      - mongodb_data:/data/db # Persist MongoDB data
+    restart: unless-stopped
+
+volumes:
+  mongodb_data: {} 
