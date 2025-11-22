@@ -90,57 +90,46 @@ const getTheme = (mode) => createTheme({
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
   },
   components: {
-    MuiTextField: {
+    MuiInputLabel: {
       styleOverrides: {
         root: {
-          '& .MuiOutlinedInput-input': {
-            textAlign: 'right',
-            // Hide number spinners
-            '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
-              WebkitAppearance: 'none',
-              margin: 0,
-            },
-            '&[type=number]': {
-              MozAppearance: 'textfield',
-            },
+          right: '28px !important',
+          left: 'auto !important',
+          transformOrigin: 'top right !important',
+          '&.MuiInputLabel-shrink': {
+            right: '18px !important',
+            left: 'auto !important',
           },
-          '& .MuiInputLabel-root': {
-            right: 28,
-            left: 'auto',
-            transformOrigin: 'top right',
-          },
-          '& .MuiInputLabel-shrink': {
-            right: 18,
-            left: 'auto',
-            transformOrigin: 'top right',
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            textAlign: 'right',
-          },
-          '& legend': {
-            textAlign: 'right',
+        },
+        outlined: {
+          right: '28px !important',
+          left: 'auto !important',
+          '&.MuiInputLabel-shrink': {
+            right: '18px !important',
+            left: 'auto !important',
           },
         },
       },
     },
-    MuiFormControl: {
+    MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          '& .MuiInputLabel-root': {
-            right: 28,
-            left: 'auto',
-            transformOrigin: 'top right',
-          },
-          '& .MuiInputLabel-shrink': {
-            right: 18,
-            left: 'auto',
-            transformOrigin: 'top right',
-          },
           '& .MuiOutlinedInput-notchedOutline': {
             textAlign: 'right',
           },
-          '& legend': {
+          '& .MuiOutlinedInput-notchedOutline legend': {
             textAlign: 'right',
+            marginRight: '8px',
+          },
+        },
+        input: {
+          textAlign: 'right',
+          '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
+            WebkitAppearance: 'none',
+            margin: 0,
+          },
+          '&[type=number]': {
+            MozAppearance: 'textfield',
           },
         },
       },
@@ -180,6 +169,14 @@ const getTheme = (mode) => createTheme({
         root: {
           marginLeft: 16,
           marginRight: -11,
+        },
+      },
+    },
+    MuiDialogActions: {
+      styleOverrides: {
+        root: {
+          flexDirection: 'row-reverse',
+          justifyContent: 'flex-start',
         },
       },
     },
