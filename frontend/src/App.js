@@ -1,6 +1,70 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { api } from './services/api';
-import './App.css';
+import {
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Container,
+  Box,
+  Grid,
+  Paper,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActions,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Checkbox,
+  FormControlLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Chip,
+  CircularProgress,
+  Alert,
+  Divider,
+  InputAdornment,
+} from '@mui/material';
+import {
+  Add as AddIcon,
+  Star as StarIcon,
+  StarBorder as StarBorderIcon,
+  CheckCircle as CheckCircleIcon,
+  RadioButtonUnchecked as UncheckedIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Logout as LogoutIcon,
+  Search as SearchIcon,
+  Link as LinkIcon,
+  RateReview as ReviewIcon,
+  Bookmark as BookmarkIcon,
+} from '@mui/icons-material';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#722f37',
+    },
+    secondary: {
+      main: '#4A0E1E',
+    },
+    background: {
+      default: '#f5f5f5',
+    },
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+  },
+});
 
 const TYPES = ['Wine', 'Whisky', 'Vodka', 'Rum', 'Gin', 'Tequila', 'Brandy', 'Other'];
 const WINE_TYPES = ['Red', 'White', 'Rosé', 'Sparkling', 'Dessert', 'Fortified'];
@@ -134,215 +198,357 @@ function App() {
   };
 
   if (authLoading) {
-    return <div className="loading">Loading...</div>;
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+          <CircularProgress />
+        </Box>
+      </ThemeProvider>
+    );
   }
 
   if (!user) {
-    return <AuthForm onSuccess={(userData) => setUser(userData)} />;
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AuthForm onSuccess={(userData) => setUser(userData)} />
+      </ThemeProvider>
+    );
   }
 
   return (
-    <div className="app">
-      <header className="header">
-        <h1>Wine & Spirit Tracker</h1>
-        <div className="header-actions">
-          <span className="user-info">Welcome, {user.username}</span>
-          <button className="btn btn-secondary" onClick={handleLogout}>Logout</button>
-          <button className="btn btn-primary" onClick={handleAddNew}>+ Add New</button>
-        </div>
-      </header>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Wine & Spirit Tracker
+            </Typography>
+            <Typography variant="body2" sx={{ mr: 2 }}>
+              Welcome, {user.username}
+            </Typography>
+            <Button color="inherit" startIcon={<LogoutIcon />} onClick={handleLogout}>
+              Logout
+            </Button>
+            <Button color="inherit" variant="outlined" startIcon={<AddIcon />} onClick={handleAddNew} sx={{ ml: 1 }}>
+              Add New
+            </Button>
+          </Toolbar>
+        </AppBar>
 
-      <div className="stats-bar">
-        <div className="stat">
-          <span className="stat-value">{stats.totalCount}</span>
-          <span className="stat-label">Total Items</span>
-        </div>
-        <div className="stat">
-          <span className="stat-value">${stats.totalSpent.toFixed(2)}</span>
-          <span className="stat-label">Total Spent</span>
-        </div>
-        <div className="stat">
-          <span className="stat-value">{stats.totalLiked}</span>
-          <span className="stat-label">Favorites</span>
-        </div>
-        <div className="stat">
-          <span className="stat-value">{stats.totalItems}</span>
-          <span className="stat-label">Bottles Bought</span>
-        </div>
-      </div>
+        <Container maxWidth="xl" sx={{ mt: 3, mb: 3 }}>
+          {/* Stats Bar */}
+          <Grid container spacing={2} sx={{ mb: 3 }}>
+            <Grid item xs={6} sm={3}>
+              <Paper sx={{ p: 2, textAlign: 'center' }}>
+                <Typography variant="h4" color="primary">{stats.totalCount}</Typography>
+                <Typography variant="body2" color="text.secondary">Total Items</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Paper sx={{ p: 2, textAlign: 'center' }}>
+                <Typography variant="h4" color="primary">${stats.totalSpent.toFixed(2)}</Typography>
+                <Typography variant="body2" color="text.secondary">Total Spent</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Paper sx={{ p: 2, textAlign: 'center' }}>
+                <Typography variant="h4" color="primary">{stats.totalLiked}</Typography>
+                <Typography variant="body2" color="text.secondary">Favorites</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Paper sx={{ p: 2, textAlign: 'center' }}>
+                <Typography variant="h4" color="primary">{stats.totalItems}</Typography>
+                <Typography variant="body2" color="text.secondary">Bottles Bought</Typography>
+              </Paper>
+            </Grid>
+          </Grid>
 
-      {stats.yearlyStats.length > 0 && (
-        <div className="yearly-stats">
-          <h3>Spending by Year</h3>
-          <div className="yearly-grid">
-            {stats.yearlyStats.map(year => (
-              <div key={year._id} className="yearly-item">
-                <span className="year">{year._id}</span>
-                <span className="amount">${year.spent.toFixed(2)}</span>
-                <span className="count">{year.count} items</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="filters">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={filters.search}
-          onChange={(e) => handleFilterChange('search', e.target.value)}
-          className="filter-input"
-        />
-        <select value={filters.type} onChange={(e) => handleFilterChange('type', e.target.value)} className="filter-select">
-          <option value="">All Types</option>
-          {TYPES.map(type => <option key={type} value={type}>{type}</option>)}
-        </select>
-        <select value={filters.country} onChange={(e) => handleFilterChange('country', e.target.value)} className="filter-select">
-          <option value="">All Countries</option>
-          {COUNTRIES.map(country => <option key={country} value={country}>{country}</option>)}
-        </select>
-        {filters.type === 'Wine' && (
-          <select value={filters.wineType} onChange={(e) => handleFilterChange('wineType', e.target.value)} className="filter-select">
-            <option value="">All Wine Types</option>
-            {WINE_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
-          </select>
-        )}
-        <select value={filters.fav} onChange={(e) => handleFilterChange('fav', e.target.value)} className="filter-select">
-          <option value="">All Items</option>
-          <option value="true">Favorites</option>
-        </select>
-        <select value={filters.purchased} onChange={(e) => handleFilterChange('purchased', e.target.value)} className="filter-select">
-          <option value="">All Status</option>
-          <option value="true">Purchased</option>
-          <option value="false">Wishlist</option>
-        </select>
-        <select value={filters.reviewed} onChange={(e) => handleFilterChange('reviewed', e.target.value)} className="filter-select">
-          <option value="">All Review Status</option>
-          <option value="true">Reviewed</option>
-          <option value="false">Not Reviewed</option>
-        </select>
-        <select value={filters.interested} onChange={(e) => handleFilterChange('interested', e.target.value)} className="filter-select">
-          <option value="">All Interest</option>
-          <option value="true">Interested</option>
-        </select>
-        <select value={filters.sortBy} onChange={(e) => handleFilterChange('sortBy', e.target.value)} className="filter-select">
-          <option value="createdAt">Date Added</option>
-          <option value="name">Name</option>
-          <option value="price">Price</option>
-          <option value="dateOfPurchase">Purchase Date</option>
-        </select>
-        <select value={filters.order} onChange={(e) => handleFilterChange('order', e.target.value)} className="filter-select">
-          <option value="desc">Descending</option>
-          <option value="asc">Ascending</option>
-        </select>
-      </div>
-
-      {error && <div className="error">{error}</div>}
-
-      {loading ? (
-        <div className="loading">Loading...</div>
-      ) : (
-        <div className="product-grid">
-          {products.length === 0 ? (
-            <div className="empty">No items found. Add your first bottle!</div>
-          ) : (
-            products.map(product => (
-              <div key={product._id} className="product-card">
-                {product.picture && (
-                  <img src={product.picture} alt={product.name} className="product-image" />
-                )}
-                <div className="product-content">
-                  <h3 className="product-name">{product.name}</h3>
-                  <div className="product-meta">
-                    <span className="product-type">{product.type}</span>
-                    {product.country && <span className="product-country">{product.country}</span>}
-                    {product.kosher && <span className="product-kosher">Kosher</span>}
-                  </div>
-                  {product.wineType && <div className="product-wine-type">{product.wineType}</div>}
-                  {product.grapeType && product.grapeType.length > 0 && (
-                    <div className="product-grape">{product.grapeType.join(', ')}</div>
-                  )}
-                  {product.description && <p className="product-description">{product.description}</p>}
-                  <div className="product-price">${product.price ? product.price.toFixed(2) : '0.00'}</div>
-                  {product.alcoholPercent && <div className="product-alcohol">{product.alcoholPercent}% ABV</div>}
-
-                  <div className="product-inventory">
-                    {product.quantityBought > 0 && <span>Bought: {product.quantityBought}</span>}
-                    {product.quantityLeft !== undefined && product.quantityLeft >= 0 && <span>Left: {product.quantityLeft}</span>}
-                  </div>
-
-                  {product.pickupRange && (
-                    <div className="product-pickup">
-                      Pickup: {product.pickupRange}
-                      {product.pickupStatus && <span className="picked-up"> (Picked up)</span>}
-                    </div>
-                  )}
-
-                  {product.url && (
-                    <a href={product.url} target="_blank" rel="noopener noreferrer" className="product-link">
-                      View Product
-                    </a>
-                  )}
-
-                  {product.tags && product.tags.length > 0 && (
-                    <div className="product-tags">
-                      {product.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
-                    </div>
-                  )}
-
-                  <div className="product-status">
-                    {product.reviewed && <span className="status-badge reviewed">Reviewed</span>}
-                    {product.interested && <span className="status-badge interested">Interested</span>}
-                  </div>
-
-                  <div className="product-actions">
-                    <button
-                      className={`btn-icon ${product.liked ? 'active' : ''}`}
-                      onClick={() => handleToggleField(product, 'liked')}
-                      title="Favorite"
-                    >
-                      {product.liked ? '★' : '☆'}
-                    </button>
-                    <button
-                      className={`btn-icon ${product.bought ? 'active' : ''}`}
-                      onClick={() => handleToggleField(product, 'bought')}
-                      title="Purchased"
-                    >
-                      {product.bought ? '✓' : '○'}
-                    </button>
-                    <button
-                      className={`btn-icon ${product.reviewed ? 'active' : ''}`}
-                      onClick={() => handleToggleField(product, 'reviewed')}
-                      title="Reviewed"
-                    >
-                      R
-                    </button>
-                    <button
-                      className={`btn-icon ${product.interested ? 'active' : ''}`}
-                      onClick={() => handleToggleField(product, 'interested')}
-                      title="Interested"
-                    >
-                      !
-                    </button>
-                    <button className="btn-icon" onClick={() => handleEdit(product)} title="Edit">✎</button>
-                    <button className="btn-icon delete" onClick={() => handleDelete(product)} title="Delete">×</button>
-                  </div>
-                </div>
-              </div>
-            ))
+          {/* Yearly Stats */}
+          {stats.yearlyStats.length > 0 && (
+            <Paper sx={{ p: 2, mb: 3 }}>
+              <Typography variant="h6" gutterBottom>Spending by Year</Typography>
+              <Grid container spacing={2}>
+                {stats.yearlyStats.map(year => (
+                  <Grid item xs={6} sm={4} md={2} key={year._id}>
+                    <Box textAlign="center">
+                      <Typography variant="h6">{year._id}</Typography>
+                      <Typography variant="body1" color="primary">${year.spent.toFixed(2)}</Typography>
+                      <Typography variant="caption" color="text.secondary">{year.count} items</Typography>
+                    </Box>
+                  </Grid>
+                ))}
+              </Grid>
+            </Paper>
           )}
-        </div>
-      )}
 
-      {showForm && (
-        <ProductForm
-          product={editingProduct}
-          onSubmit={handleFormSubmit}
-          onClose={handleFormClose}
-        />
-      )}
-    </div>
+          {/* Filters */}
+          <Paper sx={{ p: 2, mb: 3 }}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  placeholder="Search..."
+                  value={filters.search}
+                  onChange={(e) => handleFilterChange('search', e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6} sm={3} md={2}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Type</InputLabel>
+                  <Select value={filters.type} label="Type" onChange={(e) => handleFilterChange('type', e.target.value)}>
+                    <MenuItem value="">All Types</MenuItem>
+                    {TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6} sm={3} md={2}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Country</InputLabel>
+                  <Select value={filters.country} label="Country" onChange={(e) => handleFilterChange('country', e.target.value)}>
+                    <MenuItem value="">All Countries</MenuItem>
+                    {COUNTRIES.map(country => <MenuItem key={country} value={country}>{country}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              {filters.type === 'Wine' && (
+                <Grid item xs={6} sm={3} md={2}>
+                  <FormControl fullWidth size="small">
+                    <InputLabel>Wine Type</InputLabel>
+                    <Select value={filters.wineType} label="Wine Type" onChange={(e) => handleFilterChange('wineType', e.target.value)}>
+                      <MenuItem value="">All Wine Types</MenuItem>
+                      {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              )}
+              <Grid item xs={6} sm={3} md={2}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Favorites</InputLabel>
+                  <Select value={filters.fav} label="Favorites" onChange={(e) => handleFilterChange('fav', e.target.value)}>
+                    <MenuItem value="">All Items</MenuItem>
+                    <MenuItem value="true">Favorites Only</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6} sm={3} md={2}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Status</InputLabel>
+                  <Select value={filters.purchased} label="Status" onChange={(e) => handleFilterChange('purchased', e.target.value)}>
+                    <MenuItem value="">All Status</MenuItem>
+                    <MenuItem value="true">Purchased</MenuItem>
+                    <MenuItem value="false">Wishlist</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6} sm={3} md={2}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Reviewed</InputLabel>
+                  <Select value={filters.reviewed} label="Reviewed" onChange={(e) => handleFilterChange('reviewed', e.target.value)}>
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value="true">Reviewed</MenuItem>
+                    <MenuItem value="false">Not Reviewed</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6} sm={3} md={2}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Interested</InputLabel>
+                  <Select value={filters.interested} label="Interested" onChange={(e) => handleFilterChange('interested', e.target.value)}>
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value="true">Interested</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6} sm={3} md={2}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Sort By</InputLabel>
+                  <Select value={filters.sortBy} label="Sort By" onChange={(e) => handleFilterChange('sortBy', e.target.value)}>
+                    <MenuItem value="createdAt">Date Added</MenuItem>
+                    <MenuItem value="name">Name</MenuItem>
+                    <MenuItem value="price">Price</MenuItem>
+                    <MenuItem value="dateOfPurchase">Purchase Date</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6} sm={3} md={2}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Order</InputLabel>
+                  <Select value={filters.order} label="Order" onChange={(e) => handleFilterChange('order', e.target.value)}>
+                    <MenuItem value="desc">Descending</MenuItem>
+                    <MenuItem value="asc">Ascending</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Paper>
+
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+          {loading ? (
+            <Box display="flex" justifyContent="center" py={4}>
+              <CircularProgress />
+            </Box>
+          ) : products.length === 0 ? (
+            <Paper sx={{ p: 4, textAlign: 'center' }}>
+              <Typography variant="h6" color="text.secondary">
+                No items found. Add your first bottle!
+              </Typography>
+            </Paper>
+          ) : (
+            <Grid container spacing={3}>
+              {products.map(product => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
+                  <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    {product.picture && (
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={product.picture}
+                        alt={product.name}
+                        sx={{ objectFit: 'cover' }}
+                      />
+                    )}
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography variant="h6" component="div" gutterBottom>
+                        {product.name}
+                      </Typography>
+                      <Box sx={{ mb: 1 }}>
+                        <Chip label={product.type} size="small" color="primary" sx={{ mr: 0.5 }} />
+                        {product.country && <Chip label={product.country} size="small" variant="outlined" sx={{ mr: 0.5 }} />}
+                        {product.kosher && <Chip label="Kosher" size="small" color="secondary" />}
+                      </Box>
+                      {product.wineType && (
+                        <Typography variant="body2" color="text.secondary">{product.wineType}</Typography>
+                      )}
+                      {product.grapeType && product.grapeType.length > 0 && (
+                        <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                          {product.grapeType.join(', ')}
+                        </Typography>
+                      )}
+                      {product.description && (
+                        <Typography variant="body2" sx={{ mt: 1, mb: 1 }}>
+                          {product.description.length > 100 ? product.description.substring(0, 100) + '...' : product.description}
+                        </Typography>
+                      )}
+                      <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+                        ${product.price ? product.price.toFixed(2) : '0.00'}
+                      </Typography>
+                      {product.alcoholPercent > 0 && (
+                        <Typography variant="body2" color="text.secondary">{product.alcoholPercent}% ABV</Typography>
+                      )}
+                      {(product.quantityBought > 0 || product.quantityLeft >= 0) && (
+                        <Box sx={{ mt: 1 }}>
+                          {product.quantityBought > 0 && (
+                            <Typography variant="body2">Bought: {product.quantityBought}</Typography>
+                          )}
+                          {product.quantityLeft !== undefined && product.quantityLeft >= 0 && (
+                            <Typography variant="body2">Left: {product.quantityLeft}</Typography>
+                          )}
+                        </Box>
+                      )}
+                      {product.pickupRange && (
+                        <Typography variant="body2" sx={{ mt: 1 }}>
+                          Pickup: {product.pickupRange}
+                          {product.pickupStatus && <Chip label="Picked up" size="small" color="success" sx={{ ml: 1 }} />}
+                        </Typography>
+                      )}
+                      {product.url && (
+                        <Button
+                          size="small"
+                          startIcon={<LinkIcon />}
+                          href={product.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          sx={{ mt: 1 }}
+                        >
+                          View Product
+                        </Button>
+                      )}
+                      {product.tags && product.tags.length > 0 && (
+                        <Box sx={{ mt: 1 }}>
+                          {product.tags.map(tag => (
+                            <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ mr: 0.5, mb: 0.5 }} />
+                          ))}
+                        </Box>
+                      )}
+                      <Box sx={{ mt: 1 }}>
+                        {product.reviewed && <Chip label="Reviewed" size="small" color="info" sx={{ mr: 0.5 }} />}
+                        {product.interested && <Chip label="Interested" size="small" color="warning" />}
+                      </Box>
+                    </CardContent>
+                    <Divider />
+                    <CardActions sx={{ justifyContent: 'space-between' }}>
+                      <Box>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleToggleField(product, 'liked')}
+                          color={product.liked ? 'primary' : 'default'}
+                          title="Favorite"
+                        >
+                          {product.liked ? <StarIcon /> : <StarBorderIcon />}
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleToggleField(product, 'bought')}
+                          color={product.bought ? 'success' : 'default'}
+                          title="Purchased"
+                        >
+                          {product.bought ? <CheckCircleIcon /> : <UncheckedIcon />}
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleToggleField(product, 'reviewed')}
+                          color={product.reviewed ? 'info' : 'default'}
+                          title="Reviewed"
+                        >
+                          <ReviewIcon />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleToggleField(product, 'interested')}
+                          color={product.interested ? 'warning' : 'default'}
+                          title="Interested"
+                        >
+                          <BookmarkIcon />
+                        </IconButton>
+                      </Box>
+                      <Box>
+                        <IconButton size="small" onClick={() => handleEdit(product)} title="Edit">
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton size="small" onClick={() => handleDelete(product)} color="error" title="Delete">
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Container>
+
+        {showForm && (
+          <ProductForm
+            product={editingProduct}
+            onSubmit={handleFormSubmit}
+            onClose={handleFormClose}
+          />
+        )}
+      </Box>
+    </ThemeProvider>
   );
 }
 
@@ -376,58 +582,78 @@ function AuthForm({ onSuccess }) {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-form">
-        <h1>Wine & Spirit Tracker</h1>
-        <h2>{isLogin ? 'Login' : 'Register'}</h2>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: 'background.default',
+      }}
+    >
+      <Paper sx={{ p: 4, maxWidth: 400, width: '100%', mx: 2 }}>
+        <Typography variant="h4" component="h1" align="center" gutterBottom color="primary">
+          Wine & Spirit Tracker
+        </Typography>
+        <Typography variant="h6" align="center" gutterBottom>
+          {isLogin ? 'Login' : 'Register'}
+        </Typography>
 
-        {error && <div className="error">{error}</div>}
+        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
         <form onSubmit={handleSubmit}>
           {!isLogin && (
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required={!isLogin}
-                minLength={3}
-              />
-            </div>
+            <TextField
+              fullWidth
+              label="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required={!isLogin}
+              inputProps={{ minLength: 3 }}
+              margin="normal"
+            />
           )}
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Loading...' : (isLogin ? 'Login' : 'Register')}
-          </button>
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            margin="normal"
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            inputProps={{ minLength: 6 }}
+            margin="normal"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            size="large"
+            disabled={loading}
+            sx={{ mt: 2 }}
+          >
+            {loading ? <CircularProgress size={24} /> : (isLogin ? 'Login' : 'Register')}
+          </Button>
         </form>
 
-        <p className="auth-switch">
-          {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <button type="button" onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? 'Register' : 'Login'}
-          </button>
-        </p>
-      </div>
-    </div>
+        <Box sx={{ mt: 2, textAlign: 'center' }}>
+          <Typography variant="body2">
+            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            <Button onClick={() => setIsLogin(!isLogin)} size="small">
+              {isLogin ? 'Register' : 'Login'}
+            </Button>
+          </Typography>
+        </Box>
+      </Paper>
+    </Box>
   );
 }
 
@@ -514,162 +740,228 @@ function ProductForm({ product, onSubmit, onClose }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{product ? 'Edit Item' : 'Add New Item'}</h2>
-          <button className="btn-close" onClick={onClose}>&times;</button>
-        </div>
-        <form onSubmit={handleSubmit} className="product-form">
-          <div className="form-group">
-            <label>Name *</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-          </div>
+    <Dialog open onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle>
+        {product ? 'Edit Item' : 'Add New Item'}
+      </DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent dividers>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Type</label>
-              <select name="type" value={formData.type} onChange={handleChange}>
-                {TYPES.map(type => <option key={type} value={type}>{type}</option>)}
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Country</label>
-              <select name="country" value={formData.country} onChange={handleChange}>
-                <option value="">Select...</option>
-                {COUNTRIES.map(country => <option key={country} value={country}>{country}</option>)}
-              </select>
-            </div>
-          </div>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Type</InputLabel>
+                <Select name="type" value={formData.type} label="Type" onChange={handleChange}>
+                  {TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Country</InputLabel>
+                <Select name="country" value={formData.country} label="Country" onChange={handleChange}>
+                  <MenuItem value="">Select...</MenuItem>
+                  {COUNTRIES.map(country => <MenuItem key={country} value={country}>{country}</MenuItem>)}
+                </Select>
+              </FormControl>
+            </Grid>
 
-          {formData.type === 'Wine' && (
-            <>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Wine Type</label>
-                  <select name="wineType" value={formData.wineType} onChange={handleChange}>
-                    <option value="">Select...</option>
-                    {WINE_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
-                  </select>
-                </div>
-                <div className="form-group checkbox-inline">
-                  <label className="checkbox-label">
-                    <input type="checkbox" name="kosher" checked={formData.kosher} onChange={handleChange} />
-                    Kosher
-                  </label>
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Grape Types (comma-separated)</label>
-                <input
-                  type="text"
-                  name="grapeType"
-                  value={formData.grapeType}
-                  onChange={handleChange}
-                  placeholder="e.g., Cabernet Sauvignon, Merlot"
+            {formData.type === 'Wine' && (
+              <>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Wine Type</InputLabel>
+                    <Select name="wineType" value={formData.wineType} label="Wine Type" onChange={handleChange}>
+                      <MenuItem value="">Select...</MenuItem>
+                      {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <FormControlLabel
+                    control={<Checkbox name="kosher" checked={formData.kosher} onChange={handleChange} />}
+                    label="Kosher"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Grape Types (comma-separated)"
+                    name="grapeType"
+                    value={formData.grapeType}
+                    onChange={handleChange}
+                    placeholder="e.g., Cabernet Sauvignon, Merlot"
+                  />
+                </Grid>
+              </>
+            )}
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                multiline
+                rows={3}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Price ($)"
+                name="price"
+                type="number"
+                value={formData.price}
+                onChange={handleChange}
+                inputProps={{ step: 0.01, min: 0 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Alcohol %"
+                name="alcoholPercent"
+                type="number"
+                value={formData.alcoholPercent}
+                onChange={handleChange}
+                inputProps={{ step: 0.1, min: 0, max: 100 }}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Quantity Bought"
+                name="quantityBought"
+                type="number"
+                value={formData.quantityBought}
+                onChange={handleChange}
+                inputProps={{ min: 0 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Quantity Left"
+                name="quantityLeft"
+                type="number"
+                value={formData.quantityLeft}
+                onChange={handleChange}
+                inputProps={{ min: 0 }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Date of Purchase"
+                name="dateOfPurchase"
+                type="date"
+                value={formData.dateOfPurchase}
+                onChange={handleChange}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Pickup Range Start</InputLabel>
+                <Select name="pickupRangeStart" value={formData.pickupRangeStart} label="Pickup Range Start" onChange={handleChange}>
+                  <MenuItem value="">Select...</MenuItem>
+                  {MONTHS.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Pickup Range End</InputLabel>
+                <Select name="pickupRangeEnd" value={formData.pickupRangeEnd} label="Pickup Range End" onChange={handleChange}>
+                  <MenuItem value="">Select...</MenuItem>
+                  {MONTHS.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Product URL"
+                name="url"
+                type="url"
+                value={formData.url}
+                onChange={handleChange}
+                placeholder="https://..."
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Tags (comma-separated)"
+                name="tags"
+                value={formData.tags}
+                onChange={handleChange}
+                placeholder="e.g., gift, special occasion"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button variant="outlined" component="label" fullWidth>
+                Upload Image
+                <input type="file" accept="image/*" hidden onChange={handleImageChange} />
+              </Button>
+              {formData.picture && (
+                <Box sx={{ mt: 2, textAlign: 'center' }}>
+                  <img src={formData.picture} alt="Preview" style={{ maxWidth: '100%', maxHeight: 200 }} />
+                </Box>
+              )}
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                <FormControlLabel
+                  control={<Checkbox name="liked" checked={formData.liked} onChange={handleChange} />}
+                  label="Favorite"
                 />
-              </div>
-            </>
-          )}
-
-          <div className="form-group">
-            <label>Description</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} rows="3" />
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Price ($)</label>
-              <input type="number" name="price" value={formData.price} onChange={handleChange} step="0.01" min="0" />
-            </div>
-            <div className="form-group">
-              <label>Alcohol %</label>
-              <input type="number" name="alcoholPercent" value={formData.alcoholPercent} onChange={handleChange} step="0.1" min="0" max="100" />
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Quantity Bought</label>
-              <input type="number" name="quantityBought" value={formData.quantityBought} onChange={handleChange} min="0" />
-            </div>
-            <div className="form-group">
-              <label>Quantity Left</label>
-              <input type="number" name="quantityLeft" value={formData.quantityLeft} onChange={handleChange} min="0" />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Date of Purchase</label>
-            <input type="date" name="dateOfPurchase" value={formData.dateOfPurchase} onChange={handleChange} />
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Pickup Range Start</label>
-              <select name="pickupRangeStart" value={formData.pickupRangeStart} onChange={handleChange}>
-                <option value="">Select...</option>
-                {MONTHS.map(month => <option key={month} value={month}>{month}</option>)}
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Pickup Range End</label>
-              <select name="pickupRangeEnd" value={formData.pickupRangeEnd} onChange={handleChange}>
-                <option value="">Select...</option>
-                {MONTHS.map(month => <option key={month} value={month}>{month}</option>)}
-              </select>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Product URL</label>
-            <input type="url" name="url" value={formData.url} onChange={handleChange} placeholder="https://..." />
-          </div>
-
-          <div className="form-group">
-            <label>Tags (comma-separated)</label>
-            <input type="text" name="tags" value={formData.tags} onChange={handleChange} placeholder="e.g., gift, special occasion" />
-          </div>
-
-          <div className="form-group">
-            <label>Image</label>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-            {formData.picture && <img src={formData.picture} alt="Preview" className="image-preview" />}
-          </div>
-
-          <div className="form-row checkboxes">
-            <label className="checkbox-label">
-              <input type="checkbox" name="liked" checked={formData.liked} onChange={handleChange} />
-              Favorite
-            </label>
-            <label className="checkbox-label">
-              <input type="checkbox" name="bought" checked={formData.bought} onChange={handleChange} />
-              Purchased
-            </label>
-            <label className="checkbox-label">
-              <input type="checkbox" name="pickupStatus" checked={formData.pickupStatus} onChange={handleChange} />
-              Picked Up
-            </label>
-          </div>
-
-          <div className="form-row checkboxes">
-            <label className="checkbox-label">
-              <input type="checkbox" name="reviewed" checked={formData.reviewed} onChange={handleChange} />
-              Reviewed
-            </label>
-            <label className="checkbox-label">
-              <input type="checkbox" name="interested" checked={formData.interested} onChange={handleChange} />
-              Interested
-            </label>
-          </div>
-
-          <div className="form-actions">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn btn-primary">{product ? 'Save Changes' : 'Add Item'}</button>
-          </div>
-        </form>
-      </div>
-    </div>
+                <FormControlLabel
+                  control={<Checkbox name="bought" checked={formData.bought} onChange={handleChange} />}
+                  label="Purchased"
+                />
+                <FormControlLabel
+                  control={<Checkbox name="pickupStatus" checked={formData.pickupStatus} onChange={handleChange} />}
+                  label="Picked Up"
+                />
+                <FormControlLabel
+                  control={<Checkbox name="reviewed" checked={formData.reviewed} onChange={handleChange} />}
+                  label="Reviewed"
+                />
+                <FormControlLabel
+                  control={<Checkbox name="interested" checked={formData.interested} onChange={handleChange} />}
+                  label="Interested"
+                />
+              </Box>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button type="submit" variant="contained">{product ? 'Save Changes' : 'Add Item'}</Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 }
 
