@@ -1059,11 +1059,11 @@ function ProductForm({ product, onSubmit, onClose }) {
                     זני ענבים
                   </Typography>
                   {availableGrapeTypes.length > 0 && (
-                    <Box sx={{ mb: 1 }}>
+                    <Box sx={{ mb: 1, textAlign: 'right' }}>
                       <Typography variant="caption" color="text.secondary">
                         לחץ לבחירה:
                       </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5, justifyContent: 'flex-start' }}>
                         {availableGrapeTypes.map(grape => (
                           <Chip
                             key={grape}
@@ -1077,7 +1077,10 @@ function ProductForm({ product, onSubmit, onClose }) {
                       </Box>
                     </Box>
                   )}
-                  <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                  <Box sx={{ display: 'flex', gap: 1, mb: 1, flexDirection: 'row-reverse' }}>
+                    <Button variant="outlined" color="primary" size="small" onClick={handleAddNewGrapeType} disabled={!newGrapeType.trim()}>
+                      הוסף
+                    </Button>
                     <TextField
                       size="small"
                       label="הוסף זן חדש"
@@ -1086,13 +1089,10 @@ function ProductForm({ product, onSubmit, onClose }) {
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddNewGrapeType())}
                       sx={{ flexGrow: 1 }}
                     />
-                    <Button variant="outlined" color="primary" size="small" onClick={handleAddNewGrapeType} disabled={!newGrapeType.trim()}>
-                      הוסף
-                    </Button>
                   </Box>
                   {formData.grapeTypes.length > 0 && (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      <Typography variant="caption" color="text.secondary" sx={{ width: '100%' }}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, textAlign: 'right' }}>
+                      <Typography variant="caption" color="text.secondary" sx={{ width: '100%', textAlign: 'right' }}>
                         נבחרו:
                       </Typography>
                       {formData.grapeTypes.map(grape => (
@@ -1219,18 +1219,11 @@ function ProductForm({ product, onSubmit, onClose }) {
 
             <Grid item xs={12}>
               <Button
-                variant="outlined"
+                variant="contained"
                 component="label"
                 fullWidth
                 size="small"
                 color="primary"
-                sx={{
-                  borderColor: 'primary.main',
-                  '&:hover': {
-                    borderColor: 'primary.dark',
-                    bgcolor: 'action.hover',
-                  }
-                }}
               >
                 העלאת תמונה
                 <input type="file" accept="image/*" hidden onChange={handleImageChange} />
@@ -1243,26 +1236,36 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'flex-start' }}>
                 <FormControlLabel
+                  labelPlacement="start"
                   control={<Checkbox name="liked" checked={formData.liked} onChange={handleChange} size="small" />}
                   label={<Typography variant="body2">מועדף</Typography>}
+                  sx={{ ml: 0, mr: 0 }}
                 />
                 <FormControlLabel
+                  labelPlacement="start"
                   control={<Checkbox name="bought" checked={formData.bought} onChange={handleChange} size="small" />}
                   label={<Typography variant="body2">נרכש</Typography>}
+                  sx={{ ml: 0, mr: 0 }}
                 />
                 <FormControlLabel
+                  labelPlacement="start"
                   control={<Checkbox name="pickupStatus" checked={formData.pickupStatus} onChange={handleChange} size="small" />}
                   label={<Typography variant="body2">נאסף</Typography>}
+                  sx={{ ml: 0, mr: 0 }}
                 />
                 <FormControlLabel
+                  labelPlacement="start"
                   control={<Checkbox name="reviewed" checked={formData.reviewed} onChange={handleChange} size="small" />}
                   label={<Typography variant="body2">נסקר</Typography>}
+                  sx={{ ml: 0, mr: 0 }}
                 />
                 <FormControlLabel
+                  labelPlacement="start"
                   control={<Checkbox name="interested" checked={formData.interested} onChange={handleChange} size="small" />}
                   label={<Typography variant="body2">מעוניין</Typography>}
+                  sx={{ ml: 0, mr: 0 }}
                 />
               </Box>
             </Grid>
