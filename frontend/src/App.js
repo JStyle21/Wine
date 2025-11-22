@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { api } from './services/api';
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
+import rtlPlugin from 'stylis-plugin-rtl';
+import { prefixer } from 'stylis';
 import {
   ThemeProvider,
   createTheme,
@@ -35,6 +39,12 @@ import {
   InputAdornment,
   useMediaQuery,
 } from '@mui/material';
+
+// Create RTL cache
+const cacheRtl = createCache({
+  key: 'muirtl',
+  stylisPlugins: [prefixer, rtlPlugin],
+});
 import {
   Add as AddIcon,
   Star as StarIcon,
@@ -294,73 +304,82 @@ function App() {
 
   if (authLoading) {
     return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-          <CircularProgress />
-        </Box>
-      </ThemeProvider>
+      <CacheProvider value={cacheRtl}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Box dir="rtl" display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+            <CircularProgress />
+          </Box>
+        </ThemeProvider>
+      </CacheProvider>
     );
   }
 
   if (!user) {
     return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <AuthForm onSuccess={(userData) => setUser(userData)} mode={mode} toggleDarkMode={toggleDarkMode} />
-      </ThemeProvider>
+      <CacheProvider value={cacheRtl}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <AuthForm onSuccess={(userData) => setUser(userData)} mode={mode} toggleDarkMode={toggleDarkMode} />
+        </ThemeProvider>
+      </CacheProvider>
     );
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              מעקב יינות ומשקאות
-            </Typography>
-            <Typography variant="body2" sx={{ ml: 2 }}>
-              שלום, {user.username}
-            </Typography>
-            <IconButton color="inherit" onClick={toggleDarkMode} title={mode === 'light' ? 'מצב כהה' : 'מצב בהיר'}>
-              {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-            </IconButton>
-            <Button color="inherit" startIcon={<LogoutIcon />} onClick={handleLogout}>
-              יציאה
-            </Button>
-            <Button color="inherit" variant="outlined" startIcon={<AddIcon />} onClick={handleAddNew} sx={{ mr: 1 }}>
-              הוסף חדש
-            </Button>
-          </Toolbar>
-        </AppBar>
+    <CacheProvider value={cacheRtl}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box dir="rtl" sx={{ flexGrow: 1 }}>
+          <AppBar position="static">
+            <Toolbar sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' }, gap: 1 }}>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                מעקב יינות ומשקאות
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
+                  שלום, {user.username}
+                </Typography>
+                <IconButton color="inherit" onClick={toggleDarkMode} title={mode === 'light' ? 'מצב כהה' : 'מצב בהיר'} size="small">
+                  {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+                </IconButton>
+                <Button color="inherit" onClick={handleLogout} size="small" sx={{ minWidth: 'auto', px: { xs: 1, sm: 2 } }}>
+                  <LogoutIcon sx={{ display: { xs: 'block', sm: 'none' } }} />
+                  <Box component="span" sx={{ display: { xs: 'none', sm: 'block' } }}>יציאה</Box>
+                </Button>
+                <Button color="inherit" variant="outlined" onClick={handleAddNew} size="small" sx={{ minWidth: 'auto', px: { xs: 1, sm: 2 } }}>
+                  <AddIcon sx={{ display: { xs: 'block', sm: 'none' } }} />
+                  <Box component="span" sx={{ display: { xs: 'none', sm: 'block' } }}>הוסף חדש</Box>
+                </Button>
+              </Box>
+            </Toolbar>
+          </AppBar>
 
-        <Container maxWidth="xl" sx={{ mt: 3, mb: 3 }}>
+        <Container maxWidth="xl" sx={{ mt: 2, mb: 3, px: { xs: 1, sm: 2, md: 3 } }}>
           {/* Stats Bar */}
-          <Grid container spacing={2} sx={{ mb: 3 }}>
+          <Grid container spacing={1} sx={{ mb: 2 }}>
             <Grid item xs={6} sm={3}>
-              <Paper sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="h4" color="primary">{stats.totalCount}</Typography>
-                <Typography variant="body2" color="text.secondary">סה״כ פריטים</Typography>
+              <Paper sx={{ p: { xs: 1, sm: 2 }, textAlign: 'center' }}>
+                <Typography variant="h5" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} color="primary">{stats.totalCount}</Typography>
+                <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }} color="text.secondary">סה״כ פריטים</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6} sm={3}>
-              <Paper sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="h4" color="primary">₪{stats.totalSpent.toFixed(2)}</Typography>
-                <Typography variant="body2" color="text.secondary">סה״כ הוצאות</Typography>
+              <Paper sx={{ p: { xs: 1, sm: 2 }, textAlign: 'center' }}>
+                <Typography variant="h5" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} color="primary">₪{stats.totalSpent.toFixed(0)}</Typography>
+                <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }} color="text.secondary">סה״כ הוצאות</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6} sm={3}>
-              <Paper sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="h4" color="primary">{stats.totalLiked}</Typography>
-                <Typography variant="body2" color="text.secondary">מועדפים</Typography>
+              <Paper sx={{ p: { xs: 1, sm: 2 }, textAlign: 'center' }}>
+                <Typography variant="h5" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} color="primary">{stats.totalLiked}</Typography>
+                <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }} color="text.secondary">מועדפים</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6} sm={3}>
-              <Paper sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="h4" color="primary">{stats.totalItems}</Typography>
-                <Typography variant="body2" color="text.secondary">בקבוקים שנקנו</Typography>
+              <Paper sx={{ p: { xs: 1, sm: 2 }, textAlign: 'center' }}>
+                <Typography variant="h5" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} color="primary">{stats.totalItems}</Typography>
+                <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }} color="text.secondary">בקבוקים שנקנו</Typography>
               </Paper>
             </Grid>
           </Grid>
@@ -384,8 +403,8 @@ function App() {
           )}
 
           {/* Filters */}
-          <Paper sx={{ p: 2, mb: 3 }}>
-            <Grid container spacing={2} alignItems="center">
+          <Paper sx={{ p: { xs: 1, sm: 2 }, mb: 2 }}>
+            <Grid container spacing={1} alignItems="center">
               <Grid item xs={12} sm={6} md={3}>
                 <TextField
                   fullWidth
@@ -505,7 +524,7 @@ function App() {
               </Typography>
             </Paper>
           ) : (
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 1, sm: 2, md: 3 }}>
               {products.map(product => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
                   <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -642,6 +661,7 @@ function App() {
         )}
       </Box>
     </ThemeProvider>
+    </CacheProvider>
   );
 }
 
@@ -676,6 +696,7 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
 
   return (
     <Box
+      dir="rtl"
       sx={{
         minHeight: '100vh',
         display: 'flex',
@@ -683,6 +704,7 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
         justifyContent: 'center',
         bgcolor: 'background.default',
         position: 'relative',
+        p: 2,
       }}
     >
       <IconButton
@@ -692,7 +714,7 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
       >
         {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
       </IconButton>
-      <Paper sx={{ p: 4, maxWidth: 400, width: '100%', mx: 2 }}>
+      <Paper sx={{ p: { xs: 2, sm: 4 }, maxWidth: 400, width: '100%' }}>
         <Typography variant="h4" component="h1" align="center" gutterBottom color="primary">
           מעקב יינות ומשקאות
         </Typography>
