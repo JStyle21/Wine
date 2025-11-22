@@ -763,10 +763,8 @@ function App() {
 }
 
 function AuthForm({ onSuccess, mode, toggleDarkMode }) {
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -775,20 +773,17 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
     setError('');
     setLoading(true);
 
-    try {
-      let data;
-      if (isLogin) {
-        data = await api.login(email, password);
-      } else {
-        data = await api.register(username, email, password);
-      }
-      localStorage.setItem('token', data.token);
-      onSuccess(data.user);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    // Hardcoded credentials check
+    if (username === 'admin' && password === '123winqwe') {
+      // Create a mock token and user
+      const mockToken = 'hardcoded-admin-token-' + Date.now();
+      const mockUser = { username: 'admin', email: 'admin@local' };
+      localStorage.setItem('token', mockToken);
+      onSuccess(mockUser);
+    } else {
+      setError('שם משתמש או סיסמה שגויים');
     }
+    setLoading(false);
   };
 
   return (
@@ -816,29 +811,17 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
           מעקב יינות ומשקאות
         </Typography>
         <Typography variant="h6" align="center" gutterBottom>
-          {isLogin ? 'התחברות' : 'הרשמה'}
+          התחברות
         </Typography>
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
         <form onSubmit={handleSubmit}>
-          {!isLogin && (
-            <TextField
-              fullWidth
-              label="שם משתמש"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required={!isLogin}
-              inputProps={{ minLength: 3 }}
-              margin="normal"
-            />
-          )}
           <TextField
             fullWidth
-            label="אימייל"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            label="שם משתמש"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
             margin="normal"
           />
@@ -849,7 +832,6 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            inputProps={{ minLength: 6 }}
             margin="normal"
           />
           <Button
@@ -860,18 +842,9 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
             disabled={loading}
             sx={{ mt: 2 }}
           >
-            {loading ? <CircularProgress size={24} /> : (isLogin ? 'התחברות' : 'הרשמה')}
+            {loading ? <CircularProgress size={24} /> : 'התחברות'}
           </Button>
         </form>
-
-        <Box sx={{ mt: 2, textAlign: 'center' }}>
-          <Typography variant="body2">
-            {isLogin ? "אין לך חשבון? " : "כבר יש לך חשבון? "}
-            <Button onClick={() => setIsLogin(!isLogin)} size="small">
-              {isLogin ? 'הרשמה' : 'התחברות'}
-            </Button>
-          </Typography>
-        </Box>
       </Paper>
     </Box>
   );
