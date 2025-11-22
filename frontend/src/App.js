@@ -89,6 +89,76 @@ const getTheme = (mode) => createTheme({
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
   },
+  components: {
+    MuiSelect: {
+      defaultProps: {
+        MenuProps: {
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'right',
+          },
+          transformOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+        },
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          direction: 'rtl',
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          direction: 'rtl',
+          textAlign: 'right',
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          right: 14,
+          left: 'auto',
+          transformOrigin: 'top right',
+          '&.MuiInputLabel-shrink': {
+            right: 14,
+            left: 'auto',
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        notchedOutline: {
+          textAlign: 'right',
+        },
+        input: {
+          textAlign: 'right',
+          // Hide number spinners
+          '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
+            WebkitAppearance: 'none',
+            margin: 0,
+          },
+          '&[type=number]': {
+            MozAppearance: 'textfield',
+          },
+        },
+      },
+    },
+    MuiFormControlLabel: {
+      styleOverrides: {
+        root: {
+          marginLeft: 0,
+          marginRight: -11,
+        },
+      },
+    },
+  },
 });
 
 // English values for database, Hebrew labels for display
@@ -991,7 +1061,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddNewGrapeType())}
                       sx={{ flexGrow: 1 }}
                     />
-                    <Button variant="outlined" onClick={handleAddNewGrapeType} disabled={!newGrapeType.trim()}>
+                    <Button variant="outlined" color="primary" size="small" onClick={handleAddNewGrapeType} disabled={!newGrapeType.trim()}>
                       הוסף
                     </Button>
                   </Box>
@@ -1123,7 +1193,20 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
-              <Button variant="outlined" component="label" fullWidth size="small">
+              <Button
+                variant="outlined"
+                component="label"
+                fullWidth
+                size="small"
+                color="primary"
+                sx={{
+                  borderColor: 'primary.main',
+                  '&:hover': {
+                    borderColor: 'primary.dark',
+                    bgcolor: 'action.hover',
+                  }
+                }}
+              >
                 העלאת תמונה
                 <input type="file" accept="image/*" hidden onChange={handleImageChange} />
               </Button>
@@ -1161,8 +1244,8 @@ function ProductForm({ product, onSubmit, onClose }) {
           </Grid>
         </DialogContent>
         <DialogActions sx={{ px: 2, py: 1.5 }}>
-          <Button onClick={onClose} size="small">ביטול</Button>
-          <Button type="submit" variant="contained" size="small">{product ? 'שמור' : 'הוסף'}</Button>
+          <Button onClick={onClose} size="small" color="inherit" sx={{ color: 'text.primary' }}>ביטול</Button>
+          <Button type="submit" variant="contained" size="small" color="primary">{product ? 'שמור' : 'הוסף'}</Button>
         </DialogActions>
       </form>
     </Dialog>
