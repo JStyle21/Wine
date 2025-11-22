@@ -39,12 +39,6 @@ import {
   InputAdornment,
   useMediaQuery,
 } from '@mui/material';
-
-// Create RTL cache
-const cacheRtl = createCache({
-  key: 'muirtl',
-  stylisPlugins: [prefixer, rtlPlugin],
-});
 import {
   Add as AddIcon,
   Star as StarIcon,
@@ -61,6 +55,12 @@ import {
   DarkMode as DarkModeIcon,
   LightMode as LightModeIcon,
 } from '@mui/icons-material';
+
+// Create RTL cache
+const cacheRtl = createCache({
+  key: 'muirtl',
+  stylisPlugins: [prefixer, rtlPlugin],
+});
 
 const getTheme = (mode) => createTheme({
   direction: 'rtl',
