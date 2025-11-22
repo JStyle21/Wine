@@ -1,0 +1,184 @@
+.filter-controls-container {
+  padding: 1.5rem;
+  background-color: #ffffff; /* White background */
+  border-radius: 4px; /* Consistent with other containers */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); /* Material card shadow */
+  margin-bottom: 2rem;
+}
+
+.filter-controls-container h3 {
+  text-align: center;
+  color: #212121; /* Primary text */
+  margin-top: 0; /* Remove extra top margin if any */
+  margin-bottom: 1.5rem; /* Adjusted spacing */
+  font-size: 1.25rem; /* Smaller heading for filter section */
+  font-weight: 500;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1.5rem;
+  position: relative; /* For input underline effects */
+}
+
+.filter-group:last-child {
+  margin-bottom: 0.5rem; /* Reduce margin for last group in grid */
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #757575; /* Secondary text for labels */
+  font-weight: 400; /* Normal weight */
+  font-size: 0.875rem;
+}
+
+/* Material Filled Input/Select Style (Simplified) */
+.filter-group input[type="text"],
+.filter-group input[type="number"],
+.filter-group select {
+  width: 100%;
+  padding: 1rem 0.75rem 0.5rem 0.75rem; /* Padding for filled style */
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.42); /* Bottom border for unfocused */
+  background-color: #f5f5f5; /* Light gray background for input */
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  font-size: 0.95rem; /* Slightly smaller font for filters */
+  color: #212121;
+  transition: border-bottom-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.filter-group input[type="text"]:focus,
+.filter-group input[type="number"]:focus,
+.filter-group select:focus {
+  outline: none;
+  border-bottom: 2px solid #009688; /* Accent color (Teal) for focused underline */
+  background-color: #efefef; /* Slightly different background on focus */
+}
+
+/* Material Select Arrow */
+.filter-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22rgba(0,0,0,0.54)%22%20d%3D%22M7%2010l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.2em;
+  padding-right: 2.5rem; /* Ensure space for the arrow */
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem 1.5rem; /* Adjust gap */
+}
+
+/* Styles for the new filter button group */
+.filter-buttons-group {
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  height: 3rem; /* Match the height of input/select elements */
+}
+
+.filter-buttons-group label {
+  font-weight: 400;
+  color: #757575;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+}
+
+.filter-buttons-group button {
+  padding: 0.5em 1em;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #3f51b5; /* Primary color text */
+  background-color: transparent;
+  border: 1px solid #c5cae9; /* Light primary color border */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.filter-buttons-group button:hover {
+  background-color: #e8eaf6; /* Very light primary color */
+}
+
+.filter-buttons-group button.active {
+  background-color: #3f51b5; /* Primary color fill */
+  color: #ffffff;
+  border-color: #3f51b5;
+}
+
+/* Remove the button for now, as the filters apply on change */
+/* If a dedicated "Apply Filters" button is added later, style it like .submit-button */
+
+.search-container {
+  position: relative;
+  flex-grow: 1;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.suggestions-list li {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.suggestions-list li:last-child {
+  border-bottom: none;
+}
+
+.suggestions-list li:hover {
+  background-color: #f5f5f5;
+}
+
+.filter-group-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  min-height: 4rem; /* Ensure consistent height */
+}
+
+.filter-group.search-group {
+  flex-grow: 1;
+}
+
+.filter-grid .filter-group {
+  min-height: 4rem; /* Consistent height for all filter groups */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.filter-grid .filter-group label {
+  margin-bottom: 0.3rem;
+}
+
+.filter-grid .filter-group input,
+.filter-grid .filter-group select {
+  margin-top: auto;
+} 

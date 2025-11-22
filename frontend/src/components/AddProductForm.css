@@ -1,0 +1,493 @@
+.add-product-form {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); /* Material card shadow */
+  margin-bottom: 2rem; /* Space below form */
+}
+
+.add-product-form h3 {
+  text-align: center;
+  color: #212121;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem; /* Material subtitle */
+  font-weight: 500;
+}
+
+.form-group {
+  margin-bottom: 1.5rem; /* Increased spacing for Material */
+  position: relative; /* For underline and floating label effects if added later */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #757575; /* Secondary text for labels */
+  font-weight: 400;
+  font-size: 0.875rem; /* 12px or 14px */
+}
+
+/* Material Filled Input Style (Simplified) */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 1rem 0.75rem 0.5rem 0.75rem; /* Padding for filled style */
+  border: none; /* Remove default border */
+  border-bottom: 1px solid rgba(0,0,0,0.42); /* Bottom border for unfocused state */
+  background-color: #f5f5f5; /* Light gray background for input */
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-bottom: 2px solid #009688; /* Accent color for focused underline */
+  background-color: #efefef; /* Slightly different background on focus */
+}
+
+/* Specific styling for select to ensure consistency */
+.form-group select {
+  min-width: 180px; /* Ensure enough width for Hebrew text */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22rgba(0,0,0,0.54)%22%20d%3D%22M7%2010l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: left 0.75rem center; /* Adjusted for RTL */
+  background-size: 1.2em;
+  padding-left: 2.5rem; /* Ensure space for the arrow */
+}
+
+/* Material Checkbox styling */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem; /* Adjust spacing */
+  margin-bottom: 1rem;
+}
+
+.checkbox-group label {
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+  font-weight: 400;
+  color: #212121;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #757575; /* Gray border for checkbox */
+  border-radius: 2px; /* Slightly less rounded for Material */
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  vertical-align: middle;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background-color: #009688; /* Accent color fill */
+  border-color: #009688;
+}
+
+.checkbox-group input[type="checkbox"]:checked::before {
+  content: '\2713'; /* Checkmark */
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 1;
+}
+
+.form-group input[type="number"] {
+  width: auto;
+  min-width: 100px;
+  max-width: 180px;
+  /* Inherits other styles */
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  /* Inherits other styles */
+}
+
+.submit-button {
+  display: inline-block; /* For proper alignment if other buttons are added */
+  width: auto; /* Auto width based on content */
+  min-width: 88px; /* Material standard min width */
+  padding: 0.75em 1.5em;
+  background-color: #3f51b5; /* Primary color (Indigo) */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 
+              0 3px 1px -2px rgba(0,0,0,0.12), 
+              0 1px 5px 0 rgba(0,0,0,0.2);
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  margin-top: 1rem;
+}
+
+.submit-button:hover {
+  background-color: #303f9f; /* Darker Indigo */
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 
+              0 1px 10px 0 rgba(0,0,0,0.12), 
+              0 2px 4px -1px rgba(0,0,0,0.2);
+}
+
+.submit-button:active {
+  box-shadow: 0 8px 10px 1px rgb(0 0 0 / 14%), 
+              0 3px 14px 2px rgb(0 0 0 / 12%), 
+              0 5px 5px -3px rgb(0 0 0 / 20%);
+}
+
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.form-buttons .submit-button,
+.form-buttons .cancel-button {
+  flex: 1;
+  width: auto;
+  margin-top: 0;
+}
+
+.cancel-button {
+  display: inline-block;
+  width: auto;
+  min-width: 88px;
+  padding: 0.75em 1.5em;
+  background-color: #757575;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 
+              0 3px 1px -2px rgba(0,0,0,0.12), 
+              0 1px 5px 0 rgba(0,0,0,0.2);
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.cancel-button:hover {
+  background-color: #616161;
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 
+              0 1px 10px 0 rgba(0,0,0,0.12), 
+              0 2px 4px -1px rgba(0,0,0,0.2);
+}
+
+.image-preview {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+.image-preview img {
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.clear-image-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease;
+}
+
+.clear-image-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Compact Form Layout */
+.compact-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #fafafa;
+  border-radius: 6px;
+  border-left: 4px solid #009688;
+}
+
+.section-title {
+  font-weight: 500;
+  color: #00796b;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.form-row:last-child {
+  margin-bottom: 0;
+}
+
+.half-width {
+  flex: 1;
+  min-width: 0;
+}
+
+.third-width {
+  flex: 1;
+  min-width: 120px;
+}
+
+.checkboxes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 1.5rem;
+}
+
+.checkboxes-section .checkbox-group {
+  margin: 0;
+}
+
+.radio-group-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.radio-group-compact.vertical {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.radio-option.small {
+  font-size: 0.85rem;
+}
+
+.radio-option.small label {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.tag-input-container.compact {
+  min-height: 2.5rem;
+  padding: 0.3rem 0.5rem;
+}
+
+.tag-item.small {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+}
+
+.wine-section {
+  background-color: #f3e5f5;
+  border-left-color: #7b1fa2;
+}
+
+.image-preview.compact {
+  max-width: 200px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.image-preview.compact img {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+.compact-file-input {
+  font-size: 0.85rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .half-width,
+  .third-width {
+    flex: none;
+    width: 100%;
+  }
+  
+  .radio-group-compact {
+    justify-content: center;
+  }
+  
+  .compact-form {
+    max-width: none;
+    margin: 0;
+  }
+}
+
+/* Styles for the condensed price and checkboxes row */
+.form-row-condensed {
+  display: flex;
+  align-items: flex-end; 
+  flex-wrap: wrap;
+  gap: 1rem; /* Gap between price field and checkbox container */
+  margin-bottom: 1.5rem;
+}
+
+.form-row-condensed .form-group {
+  margin-bottom: 0;
+  /* flex-grow: 1; Allow price field to take available space */
+}
+
+.form-row-condensed .form-group input[type="number"] {
+ max-width: none; /* Allow it to grow more if needed */
+}
+
+.form-row-condensed .checkbox-group {
+  margin: 0;
+  padding-bottom: 0.5rem; /* Align checkbox labels with input baseline */
+}
+
+.checkboxes-container {
+  display: flex;
+  gap: 1rem; /* Space between the two checkboxes */
+  align-items: center;
+}
+
+/* Radio Button Styles */
+.radio-group-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+}
+
+.radio-option input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+
+.radio-option label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: #757575;
+  font-weight: 500;
+}
+
+.radio-option input[type="radio"]:checked + label {
+  background-color: #e0f2f1; /* Light teal accent */
+  border-color: #009688;
+  color: #00796b;
+}
+
+.radio-option label:hover {
+  background-color: #efefef;
+}
+
+
+/* Tag Input Styles */
+.tag-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.42);
+  background-color: #f5f5f5;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.tag-input-container:focus-within {
+  outline: none;
+  border-bottom: 2px solid #009688;
+  background-color: #efefef;
+}
+
+.tag-input-container input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  min-width: 120px;
+}
+
+.tag-item {
+  display: flex;
+  align-items: center;
+  background-color: #009688; /* Accent color */
+  color: white;
+  border-radius: 12px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tag-item button {
+  background: none;
+  border: none;
+  color: white;
+  margin-right: 5px; /* Space from text */
+  margin-left: -5px; /* Pull closer to edge */
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+} 

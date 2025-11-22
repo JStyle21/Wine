@@ -1,0 +1,216 @@
+/* Styles for ProductList.tsx */
+.product-list-container {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Narrower cards to fit multiple per row */
+  gap: 1.5rem; /* Increased gap for better spacing */
+  align-items: start; /* Align cards to start to prevent stretching */
+}
+
+.no-products-message {
+  text-align: center;
+  padding: 1.5rem;
+  color: #757575; /* Secondary text */
+  font-size: 1rem;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  margin: 1rem;
+}
+
+/* Styles for ProductItem.tsx - Material Card */
+.product-item {
+  background-color: #ffffff;
+  border: none; /* Material cards typically don't have borders if they have shadow */
+  border-radius: 4px;
+  padding: 1rem; /* 16px padding */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Material transition */
+  display: flex;
+  flex-direction: column;
+  min-height: 200px; /* Reduced height for more compact cards */
+  height: auto; /* Allow cards to grow as needed */
+}
+
+.product-item:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.16), 0 4px 8px rgba(0,0,0,0.23); /* Lift effect */
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.product-item h4 {
+  font-size: 1.25rem; /* Material card title */
+  color: #212121; /* Primary text */
+  font-weight: 500;
+  margin: 0;
+  border-bottom: none; /* Remove border from previous style */
+  padding-bottom: 0;
+  flex-grow: 1;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.edit-button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* New layout structure */
+.product-content {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.product-image {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.product-image img {
+  border-radius: 4px;
+}
+
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.product-details,
+.product-additional {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.product-item p {
+  margin-bottom: 0.5rem; /* 8px */
+  font-size: 0.875rem; /* 14px, Material body1 */
+  color: #212121; /* Values in primary text color */
+  line-height: 1.5;
+}
+
+.product-item .price {
+  font-weight: 500; /* Medium weight for price */
+  font-size: 1rem; /* Slightly larger for emphasis */
+  color: #212121;
+  margin-top: auto; /* Pushes price to the bottom */
+  padding-top: 0.5rem;
+  align-self: flex-start; /* Align to start of flex cross-axis */
+}
+
+.product-detail-label {
+  font-weight: 400;
+  color: #757575; /* Secondary text for labels */
+  margin-right: 0.4em;
+}
+
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; /* Push to bottom of card */
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  min-height: 3rem;
+}
+
+.product-status-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.product-status-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.product-status-row.purchase-info {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.product-status {
+  font-size: 0.9rem;
+  color: #757575;
+}
+
+.product-status .product-detail-label {
+  font-weight: 500;
+}
+
+.product-price {
+  font-size: 1.2rem;
+}
+
+.product-status.stock {
+  background-color: #e8f5e9;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  color: #2e7d32;
+  font-weight: 500;
+  border: 1px solid #c8e6c9;
+}
+
+.product-status.stock .product-detail-label {
+  color: #1b5e20;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-list-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .product-info {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .product-status-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .product-list-container {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (min-width: 1025px) {
+  .product-list-container {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}

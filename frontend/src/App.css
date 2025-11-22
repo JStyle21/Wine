@@ -1,0 +1,148 @@
+.App {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem 2rem 2rem 2rem; /* Adjusted padding */
+  background-color: #ffffff;
+  border-radius: 4px; /* Material Design typically uses smaller border-radius */
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 
+              0 3px 1px -2px rgba(0,0,0,0.12), 
+              0 1px 5px 0 rgba(0,0,0,0.2); /* Standard Material shadow */
+}
+
+.App h1 {
+  color: #212121; /* Primary text color */
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem; /* Material title size */
+  font-weight: 500;
+}
+
+/* Styles for loading and error messages */
+.loading-message,
+.error-message {
+  text-align: center;
+  padding: 0.8rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.loading-message {
+  color: #757575; /* Secondary text */
+  background-color: #f0f0f0; /* Consistent light gray, subtle */
+}
+
+.error-message {
+  color: #d32f2f; /* Standard error red */
+  background-color: #ffebee; /* Light pink */
+  font-weight: 500;
+}
+
+/* General container for sections */
+.section-container {
+  margin-bottom: 2rem;
+  padding-top: 0.5rem; /* Add some space if border was removed */
+}
+
+.section-container:last-child {
+  margin-bottom: 0;
+}
+
+/* Styles for the Add Product toggle button - Material Raised Button */
+.add-product-toggle-container {
+  margin-bottom: 2rem; /* Increased spacing */
+  text-align: center;
+}
+
+.toggle-add-product-button {
+  padding: 0.75em 1.5em;
+  font-size: 0.875rem; /* 14px standard */
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: #3f51b5; /* Material Indigo */
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 
+              0 3px 1px -2px rgba(0,0,0,0.12), 
+              0 1px 5px 0 rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  letter-spacing: 0.02em;
+}
+
+.toggle-add-product-button:hover {
+  background-color: #303f9f; /* Darker Indigo */
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 
+              0 1px 10px 0 rgba(0,0,0,0.12), 
+              0 2px 4px -1px rgba(0,0,0,0.2);
+}
+
+.toggle-add-product-button:active {
+  box-shadow: 0 8px 10px 1px rgb(0 0 0 / 14%), 
+              0 3px 14px 2px rgb(0 0 0 / 12%), 
+              0 5px 5px -3px rgb(0 0 0 / 20%);
+}
+
+/* If you want a different style when it's 'Cancel' (form is open) - optional */
+/* Example: 
+.toggle-add-product-button.cancel-style { 
+  background-color: #dc3545; 
+} 
+.toggle-add-product-button.cancel-style:hover { 
+  background-color: #c82333; 
+} 
+*/
+
+/* Container for all stats messages */
+.stats-container {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.expense-year-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.year-selector {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.year-selector:hover {
+  border-color: #009688;
+}
+
+.year-selector:focus {
+  outline: none;
+  border-color: #009688;
+  box-shadow: 0 0 0 2px rgba(0, 150, 136, 0.2);
+}
+
+.total-count-message {
+  text-align: center;
+  color: #757575; /* Secondary text */
+  margin: 0.2rem auto; /* Compact spacing for stats */
+  font-size: 0.9rem;
+}
+
+.info-message {
+  text-align: center;
+  padding: 2rem;
+  color: #757575;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
