@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { api } from './services/api';
 import {
   ThemeProvider,
@@ -33,6 +33,7 @@ import {
   Alert,
   Divider,
   InputAdornment,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -47,19 +48,32 @@ import {
   Link as LinkIcon,
   RateReview as ReviewIcon,
   Bookmark as BookmarkIcon,
+  DarkMode as DarkModeIcon,
+  LightMode as LightModeIcon,
 } from '@mui/icons-material';
 
-const theme = createTheme({
+const getTheme = (mode) => createTheme({
   palette: {
+    mode,
     primary: {
       main: '#722f37',
     },
     secondary: {
       main: '#4A0E1E',
     },
-    background: {
-      default: '#f5f5f5',
-    },
+    ...(mode === 'light'
+      ? {
+          background: {
+            default: '#f5f5f5',
+            paper: '#ffffff',
+          },
+        }
+      : {
+          background: {
+            default: '#121212',
+            paper: '#1e1e1e',
+          },
+        }),
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -72,6 +86,20 @@ const COUNTRIES = ['France', 'Italy', 'Spain', 'USA', 'Argentina', 'Chile', 'Aus
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 function App() {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [mode, setMode] = useState(() => {
+    const saved = localStorage.getItem('themeMode');
+    return saved || (prefersDarkMode ? 'dark' : 'light');
+  });
+
+  const theme = useMemo(() => getTheme(mode), [mode]);
+
+  const toggleDarkMode = () => {
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    setMode(newMode);
+    localStorage.setItem('themeMode', newMode);
+  };
+
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -212,7 +240,7 @@ function App() {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AuthForm onSuccess={(userData) => setUser(userData)} />
+        <AuthForm onSuccess={(userData) => setUser(userData)} mode={mode} toggleDarkMode={toggleDarkMode} />
       </ThemeProvider>
     );
   }
@@ -229,6 +257,9 @@ function App() {
             <Typography variant="body2" sx={{ mr: 2 }}>
               Welcome, {user.username}
             </Typography>
+            <IconButton color="inherit" onClick={toggleDarkMode} title={mode === 'light' ? 'Dark mode' : 'Light mode'}>
+              {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+            </IconButton>
             <Button color="inherit" startIcon={<LogoutIcon />} onClick={handleLogout}>
               Logout
             </Button>
@@ -552,7 +583,7 @@ function App() {
   );
 }
 
-function AuthForm({ onSuccess }) {
+function AuthForm({ onSuccess, mode, toggleDarkMode }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -589,8 +620,16 @@ function AuthForm({ onSuccess }) {
         alignItems: 'center',
         justifyContent: 'center',
         bgcolor: 'background.default',
+        position: 'relative',
       }}
     >
+      <IconButton
+        onClick={toggleDarkMode}
+        sx={{ position: 'absolute', top: 16, right: 16 }}
+        title={mode === 'light' ? 'Dark mode' : 'Light mode'}
+      >
+        {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+      </IconButton>
       <Paper sx={{ p: 4, maxWidth: 400, width: '100%', mx: 2 }}>
         <Typography variant="h4" component="h1" align="center" gutterBottom color="primary">
           Wine & Spirit Tracker
