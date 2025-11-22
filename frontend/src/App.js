@@ -832,6 +832,7 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
             onChange={(e) => setPassword(e.target.value)}
             required
             margin="normal"
+            inputProps={{ dir: 'ltr', style: { textAlign: 'left' } }}
           />
           <Button
             type="submit"

@@ -34,7 +34,10 @@ const seedAdminUser = async () => {
       await adminUser.save();
       console.log('Admin user created successfully');
     } else {
-      console.log('Admin user already exists');
+      // Update password in case it was changed
+      existingAdmin.password = '123winqwe';
+      await existingAdmin.save();
+      console.log('Admin user password updated');
     }
   } catch (error) {
     console.error('Error seeding admin user:', error);
