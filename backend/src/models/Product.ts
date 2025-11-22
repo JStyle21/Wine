@@ -21,8 +21,7 @@ export interface IProduct extends Document {
   pickupStatus?: boolean; // picked up or not
   reviewed?: boolean; // reviewed checkbox
   interested?: boolean; // interested checkbox
-  quantityBought?: number; // how many bought
-  quantityLeft?: number; // how many left in stock
+  stock?: number; // how many in stock
   user: mongoose.Types.ObjectId; // owner of this product
 }
 
@@ -47,8 +46,7 @@ const ProductSchema: Schema = new Schema({
   pickupStatus: { type: Boolean, default: false }, // picked up or not
   reviewed: { type: Boolean, default: false }, // reviewed checkbox
   interested: { type: Boolean, default: false }, // interested checkbox
-  quantityBought: { type: Number, required: false, min: 0 }, // how many bought
-  quantityLeft: { type: Number, required: false, min: 0 }, // how many left
+  stock: { type: Number, required: false, min: 0 }, // how many in stock
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // owner
 }, { timestamps: true });
 

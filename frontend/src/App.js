@@ -280,8 +280,8 @@ function App() {
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="h4" color="primary">${stats.totalSpent.toFixed(2)}</Typography>
-                <Typography variant="body2" color="text.secondary">Total Spent</Typography>
+                <Typography variant="h4" color="primary">₪{stats.totalSpent.toFixed(2)}</Typography>
+                <Typography variant="body2" color="text.secondary">סה"כ הוצאות</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6} sm={3}>
@@ -307,8 +307,8 @@ function App() {
                   <Grid item xs={6} sm={4} md={2} key={year._id}>
                     <Box textAlign="center">
                       <Typography variant="h6">{year._id}</Typography>
-                      <Typography variant="body1" color="primary">${year.spent.toFixed(2)}</Typography>
-                      <Typography variant="caption" color="text.secondary">{year.count} items</Typography>
+                      <Typography variant="body1" color="primary">₪{year.spent.toFixed(2)}</Typography>
+                      <Typography variant="caption" color="text.secondary">{year.count} פריטים</Typography>
                     </Box>
                   </Grid>
                 ))}
@@ -474,20 +474,15 @@ function App() {
                         </Typography>
                       )}
                       <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
-                        ${product.price ? product.price.toFixed(2) : '0.00'}
+                        ₪{product.price ? product.price.toFixed(2) : '0.00'}
                       </Typography>
                       {product.alcoholPercent > 0 && (
                         <Typography variant="body2" color="text.secondary">{product.alcoholPercent}% ABV</Typography>
                       )}
-                      {(product.quantityBought > 0 || product.quantityLeft >= 0) && (
-                        <Box sx={{ mt: 1 }}>
-                          {product.quantityBought > 0 && (
-                            <Typography variant="body2">Bought: {product.quantityBought}</Typography>
-                          )}
-                          {product.quantityLeft !== undefined && product.quantityLeft >= 0 && (
-                            <Typography variant="body2">Left: {product.quantityLeft}</Typography>
-                          )}
-                        </Box>
+                      {product.stock > 0 && (
+                        <Typography variant="body2" sx={{ mt: 1 }}>
+                          במלאי: {product.stock}
+                        </Typography>
                       )}
                       {product.pickupRange && (
                         <Typography variant="body2" sx={{ mt: 1 }}>
@@ -718,8 +713,7 @@ function ProductForm({ product, onSubmit, onClose }) {
     pickupStatus: product?.pickupStatus || false,
     reviewed: product?.reviewed || false,
     interested: product?.interested || false,
-    quantityBought: product?.quantityBought || '',
-    quantityLeft: product?.quantityLeft || '',
+    stock: product?.stock || '',
   });
 
   useEffect(() => {
@@ -764,8 +758,7 @@ function ProductForm({ product, onSubmit, onClose }) {
       ...formData,
       price: parseFloat(formData.price) || 0,
       alcoholPercent: parseFloat(formData.alcoholPercent) || 0,
-      quantityBought: parseInt(formData.quantityBought) || 0,
-      quantityLeft: parseInt(formData.quantityLeft) || 0,
+      stock: parseInt(formData.stock) || 0,
       grapeType: formData.grapeType ? formData.grapeType.split(',').map(s => s.trim()).filter(Boolean) : [],
       tags: formData.tags ? formData.tags.split(',').map(s => s.trim()).filter(Boolean) : [],
       pickupRange,
@@ -857,10 +850,10 @@ function ProductForm({ product, onSubmit, onClose }) {
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
-                label="Price ($)"
+                label="מחיר (₪)"
                 name="price"
                 type="number"
                 value={formData.price}
@@ -868,10 +861,10 @@ function ProductForm({ product, onSubmit, onClose }) {
                 inputProps={{ step: 0.01, min: 0 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
-                label="Alcohol %"
+                label="אחוז אלכוהול"
                 name="alcoholPercent"
                 type="number"
                 value={formData.alcoholPercent}
@@ -879,25 +872,13 @@ function ProductForm({ product, onSubmit, onClose }) {
                 inputProps={{ step: 0.1, min: 0, max: 100 }}
               />
             </Grid>
-
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
-                label="Quantity Bought"
-                name="quantityBought"
+                label="מלאי"
+                name="stock"
                 type="number"
-                value={formData.quantityBought}
-                onChange={handleChange}
-                inputProps={{ min: 0 }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Quantity Left"
-                name="quantityLeft"
-                type="number"
-                value={formData.quantityLeft}
+                value={formData.stock}
                 onChange={handleChange}
                 inputProps={{ min: 0 }}
               />
