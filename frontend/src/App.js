@@ -893,16 +893,29 @@ function ProductForm({ product, onSubmit, onClose }) {
   };
 
   return (
-    <Dialog open onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>
+    <Dialog
+      open
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          m: { xs: 1, sm: 2 },
+          maxHeight: { xs: 'calc(100% - 16px)', sm: 'calc(100% - 64px)' },
+          width: { xs: 'calc(100% - 16px)', sm: 'auto' }
+        }
+      }}
+    >
+      <DialogTitle sx={{ pb: 1, fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
         {product ? 'עריכת פריט' : 'הוספת פריט חדש'}
       </DialogTitle>
       <form onSubmit={handleSubmit}>
-        <DialogContent dividers>
-          <Grid container spacing={2}>
+        <DialogContent dividers sx={{ p: { xs: 1.5, sm: 2 } }}>
+          <Grid container spacing={1.5}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
+                size="small"
                 label="שם"
                 name="name"
                 value={formData.name}
@@ -911,16 +924,16 @@ function ProductForm({ product, onSubmit, onClose }) {
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
+            <Grid item xs={6}>
+              <FormControl fullWidth size="small">
                 <InputLabel>סוג</InputLabel>
                 <Select name="type" value={formData.type} label="סוג" onChange={handleChange}>
                   {TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, TYPE_LABELS)}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
+            <Grid item xs={6}>
+              <FormControl fullWidth size="small">
                 <InputLabel>ארץ</InputLabel>
                 <Select name="country" value={formData.country} label="ארץ" onChange={handleChange}>
                   <MenuItem value="">בחר...</MenuItem>
@@ -931,8 +944,8 @@ function ProductForm({ product, onSubmit, onClose }) {
 
             {formData.type === 'Wine' && (
               <>
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
+                <Grid item xs={6}>
+                  <FormControl fullWidth size="small">
                     <InputLabel>סוג יין</InputLabel>
                     <Select name="wineType" value={formData.wineType} label="סוג יין" onChange={handleChange}>
                       <MenuItem value="">בחר...</MenuItem>
@@ -940,9 +953,9 @@ function ProductForm({ product, onSubmit, onClose }) {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6} sx={{ display: 'flex', alignItems: 'center' }}>
+                <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center' }}>
                   <FormControlLabel
-                    control={<Checkbox name="kosher" checked={formData.kosher} onChange={handleChange} />}
+                    control={<Checkbox name="kosher" checked={formData.kosher} onChange={handleChange} size="small" />}
                     label="כשר"
                   />
                 </Grid>
@@ -1005,18 +1018,20 @@ function ProductForm({ product, onSubmit, onClose }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
+                size="small"
                 label="תיאור"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 multiline
-                rows={3}
+                rows={2}
               />
             </Grid>
 
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={4}>
               <TextField
                 fullWidth
+                size="small"
                 label="מחיר (₪)"
                 name="price"
                 type="number"
@@ -1025,10 +1040,11 @@ function ProductForm({ product, onSubmit, onClose }) {
                 inputProps={{ step: 0.01, min: 0 }}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={4}>
               <TextField
                 fullWidth
-                label="אחוז אלכוהול"
+                size="small"
+                label="אלכוהול %"
                 name="alcoholPercent"
                 type="number"
                 value={formData.alcoholPercent}
@@ -1036,9 +1052,10 @@ function ProductForm({ product, onSubmit, onClose }) {
                 inputProps={{ step: 0.1, min: 0, max: 100 }}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={4}>
               <TextField
                 fullWidth
+                size="small"
                 label="מלאי"
                 name="stock"
                 type="number"
@@ -1051,6 +1068,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
+                size="small"
                 label="תאריך רכישה"
                 name="dateOfPurchase"
                 type="date"
@@ -1060,19 +1078,19 @@ function ProductForm({ product, onSubmit, onClose }) {
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>התחלת טווח איסוף</InputLabel>
-                <Select name="pickupRangeStart" value={formData.pickupRangeStart} label="התחלת טווח איסוף" onChange={handleChange}>
+            <Grid item xs={6}>
+              <FormControl fullWidth size="small">
+                <InputLabel>איסוף מ-</InputLabel>
+                <Select name="pickupRangeStart" value={formData.pickupRangeStart} label="איסוף מ-" onChange={handleChange}>
                   <MenuItem value="">בחר...</MenuItem>
                   {MONTHS.map(month => <MenuItem key={month} value={month}>{getLabel(month, MONTH_LABELS)}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>סיום טווח איסוף</InputLabel>
-                <Select name="pickupRangeEnd" value={formData.pickupRangeEnd} label="סיום טווח איסוף" onChange={handleChange}>
+            <Grid item xs={6}>
+              <FormControl fullWidth size="small">
+                <InputLabel>עד</InputLabel>
+                <Select name="pickupRangeEnd" value={formData.pickupRangeEnd} label="עד" onChange={handleChange}>
                   <MenuItem value="">בחר...</MenuItem>
                   {MONTHS.map(month => <MenuItem key={month} value={month}>{getLabel(month, MONTH_LABELS)}</MenuItem>)}
                 </Select>
@@ -1082,6 +1100,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
+                size="small"
                 label="קישור למוצר"
                 name="url"
                 type="url"
@@ -1094,6 +1113,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
+                size="small"
                 label="תגיות (מופרדות בפסיק)"
                 name="tags"
                 value={formData.tags}
@@ -1103,46 +1123,46 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
-              <Button variant="outlined" component="label" fullWidth>
+              <Button variant="outlined" component="label" fullWidth size="small">
                 העלאת תמונה
                 <input type="file" accept="image/*" hidden onChange={handleImageChange} />
               </Button>
               {formData.picture && (
-                <Box sx={{ mt: 2, textAlign: 'center' }}>
-                  <img src={formData.picture} alt="תצוגה מקדימה" style={{ maxWidth: '100%', maxHeight: 200 }} />
+                <Box sx={{ mt: 1, textAlign: 'center' }}>
+                  <img src={formData.picture} alt="תצוגה מקדימה" style={{ maxWidth: '100%', maxHeight: 150 }} />
                 </Box>
               )}
             </Grid>
 
             <Grid item xs={12}>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 <FormControlLabel
-                  control={<Checkbox name="liked" checked={formData.liked} onChange={handleChange} />}
-                  label="מועדף"
+                  control={<Checkbox name="liked" checked={formData.liked} onChange={handleChange} size="small" />}
+                  label={<Typography variant="body2">מועדף</Typography>}
                 />
                 <FormControlLabel
-                  control={<Checkbox name="bought" checked={formData.bought} onChange={handleChange} />}
-                  label="נרכש"
+                  control={<Checkbox name="bought" checked={formData.bought} onChange={handleChange} size="small" />}
+                  label={<Typography variant="body2">נרכש</Typography>}
                 />
                 <FormControlLabel
-                  control={<Checkbox name="pickupStatus" checked={formData.pickupStatus} onChange={handleChange} />}
-                  label="נאסף"
+                  control={<Checkbox name="pickupStatus" checked={formData.pickupStatus} onChange={handleChange} size="small" />}
+                  label={<Typography variant="body2">נאסף</Typography>}
                 />
                 <FormControlLabel
-                  control={<Checkbox name="reviewed" checked={formData.reviewed} onChange={handleChange} />}
-                  label="נסקר"
+                  control={<Checkbox name="reviewed" checked={formData.reviewed} onChange={handleChange} size="small" />}
+                  label={<Typography variant="body2">נסקר</Typography>}
                 />
                 <FormControlLabel
-                  control={<Checkbox name="interested" checked={formData.interested} onChange={handleChange} />}
-                  label="מעוניין"
+                  control={<Checkbox name="interested" checked={formData.interested} onChange={handleChange} size="small" />}
+                  label={<Typography variant="body2">מעוניין</Typography>}
                 />
               </Box>
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose}>ביטול</Button>
-          <Button type="submit" variant="contained">{product ? 'שמור שינויים' : 'הוסף פריט'}</Button>
+        <DialogActions sx={{ px: 2, py: 1.5 }}>
+          <Button onClick={onClose} size="small">ביטול</Button>
+          <Button type="submit" variant="contained" size="small">{product ? 'שמור' : 'הוסף'}</Button>
         </DialogActions>
       </form>
     </Dialog>
