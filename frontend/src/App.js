@@ -81,26 +81,76 @@ const getTheme = (mode) => createTheme({
   },
 });
 
-const TYPES = ['יין', 'וויסקי', 'וודקה', 'רום', "ג'ין", 'טקילה', 'ברנדי', 'אחר'];
-const WINE_TYPES = ['אדום', 'לבן', 'רוזה', 'מבעבע', 'קינוח', 'מחוזק'];
+// English values for database, Hebrew labels for display
+const TYPES = ['Wine', 'Whisky', 'Vodka', 'Rum', 'Gin', 'Tequila', 'Brandy', 'Other'];
+const TYPE_LABELS = {
+  'Wine': 'יין',
+  'Whisky': 'וויסקי',
+  'Vodka': 'וודקה',
+  'Rum': 'רום',
+  'Gin': "ג'ין",
+  'Tequila': 'טקילה',
+  'Brandy': 'ברנדי',
+  'Other': 'אחר'
+};
+
+const WINE_TYPES = ['Red', 'White', 'Rosé', 'Sparkling', 'Dessert', 'Fortified'];
+const WINE_TYPE_LABELS = {
+  'Red': 'אדום',
+  'White': 'לבן',
+  'Rosé': 'רוזה',
+  'Sparkling': 'מבעבע',
+  'Dessert': 'קינוח',
+  'Fortified': 'מחוזק'
+};
+
 const COUNTRIES = [
-  'צרפת', 'איטליה', 'ספרד', 'פורטוגל', 'גרמניה', 'אוסטריה', 'יוון', 'הונגריה',
-  'ארה"ב', 'קנדה', 'מקסיקו',
-  'ארגנטינה', 'צ׳ילה', 'ברזיל', 'אורוגוואי', 'פרו',
-  'אוסטרליה', 'ניו זילנד',
-  'דרום אפריקה', 'מרוקו', 'טוניסיה', 'אלג׳יריה',
-  'ישראל', 'לבנון', 'טורקיה', 'גאורגיה', 'ארמניה',
-  'סקוטלנד', 'אירלנד', 'אנגליה', 'וויילס',
-  'יפן', 'סין', 'הודו', 'טייוואן', 'תאילנד',
-  'רוסיה', 'אוקראינה', 'פולין', 'צ׳כיה', 'סלובקיה', 'סלובניה', 'קרואטיה', 'סרביה', 'רומניה', 'בולגריה', 'מולדובה',
-  'שוויץ', 'בלגיה', 'הולנד', 'לוקסמבורג',
-  'קפריסין', 'מלטה',
-  'קובה', 'ג׳מייקה', 'ברבדוס', 'הרפובליקה הדומיניקנית', 'פוארטו ריקו',
-  'וונצואלה', 'קולומביה', 'פנמה',
-  'פיליפינים', 'אינדונזיה',
-  'אחר'
+  'France', 'Italy', 'Spain', 'Portugal', 'Germany', 'Austria', 'Greece', 'Hungary',
+  'USA', 'Canada', 'Mexico',
+  'Argentina', 'Chile', 'Brazil', 'Uruguay', 'Peru',
+  'Australia', 'New Zealand',
+  'South Africa', 'Morocco', 'Tunisia', 'Algeria',
+  'Israel', 'Lebanon', 'Turkey', 'Georgia', 'Armenia',
+  'Scotland', 'Ireland', 'England', 'Wales',
+  'Japan', 'China', 'India', 'Taiwan', 'Thailand',
+  'Russia', 'Ukraine', 'Poland', 'Czech Republic', 'Slovakia', 'Slovenia', 'Croatia', 'Serbia', 'Romania', 'Bulgaria', 'Moldova',
+  'Switzerland', 'Belgium', 'Netherlands', 'Luxembourg',
+  'Cyprus', 'Malta',
+  'Cuba', 'Jamaica', 'Barbados', 'Dominican Republic', 'Puerto Rico',
+  'Venezuela', 'Colombia', 'Panama',
+  'Philippines', 'Indonesia',
+  'Other'
 ];
-const MONTHS = ['ינו׳', 'פבר׳', 'מרץ', 'אפר׳', 'מאי', 'יוני', 'יולי', 'אוג׳', 'ספט׳', 'אוק׳', 'נוב׳', 'דצמ׳'];
+
+const COUNTRY_LABELS = {
+  'France': 'צרפת', 'Italy': 'איטליה', 'Spain': 'ספרד', 'Portugal': 'פורטוגל', 'Germany': 'גרמניה',
+  'Austria': 'אוסטריה', 'Greece': 'יוון', 'Hungary': 'הונגריה',
+  'USA': 'ארה"ב', 'Canada': 'קנדה', 'Mexico': 'מקסיקו',
+  'Argentina': 'ארגנטינה', 'Chile': 'צ׳ילה', 'Brazil': 'ברזיל', 'Uruguay': 'אורוגוואי', 'Peru': 'פרו',
+  'Australia': 'אוסטרליה', 'New Zealand': 'ניו זילנד',
+  'South Africa': 'דרום אפריקה', 'Morocco': 'מרוקו', 'Tunisia': 'טוניסיה', 'Algeria': 'אלג׳יריה',
+  'Israel': 'ישראל', 'Lebanon': 'לבנון', 'Turkey': 'טורקיה', 'Georgia': 'גאורגיה', 'Armenia': 'ארמניה',
+  'Scotland': 'סקוטלנד', 'Ireland': 'אירלנד', 'England': 'אנגליה', 'Wales': 'וויילס',
+  'Japan': 'יפן', 'China': 'סין', 'India': 'הודו', 'Taiwan': 'טייוואן', 'Thailand': 'תאילנד',
+  'Russia': 'רוסיה', 'Ukraine': 'אוקראינה', 'Poland': 'פולין', 'Czech Republic': 'צ׳כיה',
+  'Slovakia': 'סלובקיה', 'Slovenia': 'סלובניה', 'Croatia': 'קרואטיה', 'Serbia': 'סרביה',
+  'Romania': 'רומניה', 'Bulgaria': 'בולגריה', 'Moldova': 'מולדובה',
+  'Switzerland': 'שוויץ', 'Belgium': 'בלגיה', 'Netherlands': 'הולנד', 'Luxembourg': 'לוקסמבורג',
+  'Cyprus': 'קפריסין', 'Malta': 'מלטה',
+  'Cuba': 'קובה', 'Jamaica': 'ג׳מייקה', 'Barbados': 'ברבדוס', 'Dominican Republic': 'הרפובליקה הדומיניקנית', 'Puerto Rico': 'פוארטו ריקו',
+  'Venezuela': 'וונצואלה', 'Colombia': 'קולומביה', 'Panama': 'פנמה',
+  'Philippines': 'פיליפינים', 'Indonesia': 'אינדונזיה',
+  'Other': 'אחר'
+};
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH_LABELS = {
+  'Jan': 'ינו׳', 'Feb': 'פבר׳', 'Mar': 'מרץ', 'Apr': 'אפר׳', 'May': 'מאי', 'Jun': 'יוני',
+  'Jul': 'יולי', 'Aug': 'אוג׳', 'Sep': 'ספט׳', 'Oct': 'אוק׳', 'Nov': 'נוב׳', 'Dec': 'דצמ׳'
+};
+
+// Helper function to get Hebrew label
+const getLabel = (value, labels) => labels[value] || value;
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -357,7 +407,7 @@ function App() {
                   <InputLabel>סוג</InputLabel>
                   <Select value={filters.type} label="סוג" onChange={(e) => handleFilterChange('type', e.target.value)}>
                     <MenuItem value="">כל הסוגים</MenuItem>
-                    {TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                    {TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, TYPE_LABELS)}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
@@ -366,17 +416,17 @@ function App() {
                   <InputLabel>ארץ</InputLabel>
                   <Select value={filters.country} label="ארץ" onChange={(e) => handleFilterChange('country', e.target.value)}>
                     <MenuItem value="">כל הארצות</MenuItem>
-                    {COUNTRIES.map(country => <MenuItem key={country} value={country}>{country}</MenuItem>)}
+                    {COUNTRIES.map(country => <MenuItem key={country} value={country}>{getLabel(country, COUNTRY_LABELS)}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
-              {filters.type === 'יין' && (
+              {filters.type === 'Wine' && (
                 <Grid item xs={6} sm={3} md={2}>
                   <FormControl fullWidth size="small">
                     <InputLabel>סוג יין</InputLabel>
                     <Select value={filters.wineType} label="סוג יין" onChange={(e) => handleFilterChange('wineType', e.target.value)}>
                       <MenuItem value="">כל סוגי היין</MenuItem>
-                      {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                      {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, WINE_TYPE_LABELS)}</MenuItem>)}
                     </Select>
                   </FormControl>
                 </Grid>
@@ -473,12 +523,12 @@ function App() {
                         {product.name}
                       </Typography>
                       <Box sx={{ mb: 1 }}>
-                        <Chip label={product.type} size="small" color="primary" sx={{ ml: 0.5 }} />
-                        {product.country && <Chip label={product.country} size="small" variant="outlined" sx={{ ml: 0.5 }} />}
+                        <Chip label={getLabel(product.type, TYPE_LABELS)} size="small" color="primary" sx={{ ml: 0.5 }} />
+                        {product.country && <Chip label={getLabel(product.country, COUNTRY_LABELS)} size="small" variant="outlined" sx={{ ml: 0.5 }} />}
                         {product.kosher && <Chip label="כשר" size="small" color="secondary" />}
                       </Box>
                       {product.wineType && (
-                        <Typography variant="body2" color="text.secondary">{product.wineType}</Typography>
+                        <Typography variant="body2" color="text.secondary">{getLabel(product.wineType, WINE_TYPE_LABELS)}</Typography>
                       )}
                       {product.grapeType && product.grapeType.length > 0 && (
                         <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
@@ -839,7 +889,7 @@ function ProductForm({ product, onSubmit, onClose }) {
               <FormControl fullWidth>
                 <InputLabel>סוג</InputLabel>
                 <Select name="type" value={formData.type} label="סוג" onChange={handleChange}>
-                  {TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                  {TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, TYPE_LABELS)}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
@@ -848,19 +898,19 @@ function ProductForm({ product, onSubmit, onClose }) {
                 <InputLabel>ארץ</InputLabel>
                 <Select name="country" value={formData.country} label="ארץ" onChange={handleChange}>
                   <MenuItem value="">בחר...</MenuItem>
-                  {COUNTRIES.map(country => <MenuItem key={country} value={country}>{country}</MenuItem>)}
+                  {COUNTRIES.map(country => <MenuItem key={country} value={country}>{getLabel(country, COUNTRY_LABELS)}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
 
-            {formData.type === 'יין' && (
+            {formData.type === 'Wine' && (
               <>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <InputLabel>סוג יין</InputLabel>
                     <Select name="wineType" value={formData.wineType} label="סוג יין" onChange={handleChange}>
                       <MenuItem value="">בחר...</MenuItem>
-                      {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                      {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, WINE_TYPE_LABELS)}</MenuItem>)}
                     </Select>
                   </FormControl>
                 </Grid>
@@ -989,7 +1039,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 <InputLabel>התחלת טווח איסוף</InputLabel>
                 <Select name="pickupRangeStart" value={formData.pickupRangeStart} label="התחלת טווח איסוף" onChange={handleChange}>
                   <MenuItem value="">בחר...</MenuItem>
-                  {MONTHS.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+                  {MONTHS.map(month => <MenuItem key={month} value={month}>{getLabel(month, MONTH_LABELS)}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
@@ -998,7 +1048,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 <InputLabel>סיום טווח איסוף</InputLabel>
                 <Select name="pickupRangeEnd" value={formData.pickupRangeEnd} label="סיום טווח איסוף" onChange={handleChange}>
                   <MenuItem value="">בחר...</MenuItem>
-                  {MONTHS.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+                  {MONTHS.map(month => <MenuItem key={month} value={month}>{getLabel(month, MONTH_LABELS)}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
