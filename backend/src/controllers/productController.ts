@@ -138,6 +138,17 @@ export const getSuggestions: express.RequestHandler = async (req: AuthRequest, r
   }
 };
 
+export const getGrapeTypes: express.RequestHandler = async (req: AuthRequest, res, next) => {
+  try {
+    const grapeTypes = await Product.distinct('grapeType', { user: req.userId });
+    // Flatten and deduplicate since grapeType is an array
+    const uniqueGrapes = [...new Set(grapeTypes.flat())].filter(Boolean).sort();
+    res.json(uniqueGrapes);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const updateProduct: express.RequestHandler = async (req: AuthRequest, res, next) => {
   try {
     const { id } = req.params;

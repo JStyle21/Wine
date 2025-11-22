@@ -699,7 +699,7 @@ function ProductForm({ product, onSubmit, onClose }) {
     type: product?.type || 'Wine',
     country: product?.country || '',
     wineType: product?.wineType || '',
-    grapeType: product?.grapeType?.join(', ') || '',
+    grapeTypes: product?.grapeType || [],
     kosher: product?.kosher || false,
     alcoholPercent: product?.alcoholPercent || '',
     url: product?.url || '',
@@ -716,6 +716,14 @@ function ProductForm({ product, onSubmit, onClose }) {
     stock: product?.stock || '',
   });
 
+  const [availableGrapeTypes, setAvailableGrapeTypes] = useState([]);
+  const [newGrapeType, setNewGrapeType] = useState('');
+
+  useEffect(() => {
+    // Fetch available grape types
+    api.getGrapeTypes().then(setAvailableGrapeTypes).catch(() => {});
+  }, []);
+
   useEffect(() => {
     if (product?.pickupRange) {
       const parts = product.pickupRange.split('-');
@@ -728,6 +736,25 @@ function ProductForm({ product, onSubmit, onClose }) {
       }
     }
   }, [product]);
+
+  const handleGrapeTypeToggle = (grape) => {
+    setFormData(prev => ({
+      ...prev,
+      grapeTypes: prev.grapeTypes.includes(grape)
+        ? prev.grapeTypes.filter(g => g !== grape)
+        : [...prev.grapeTypes, grape]
+    }));
+  };
+
+  const handleAddNewGrapeType = () => {
+    if (newGrapeType.trim() && !formData.grapeTypes.includes(newGrapeType.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        grapeTypes: [...prev.grapeTypes, newGrapeType.trim()]
+      }));
+      setNewGrapeType('');
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -759,12 +786,13 @@ function ProductForm({ product, onSubmit, onClose }) {
       price: parseFloat(formData.price) || 0,
       alcoholPercent: parseFloat(formData.alcoholPercent) || 0,
       stock: parseInt(formData.stock) || 0,
-      grapeType: formData.grapeType ? formData.grapeType.split(',').map(s => s.trim()).filter(Boolean) : [],
+      grapeType: formData.grapeTypes,
       tags: formData.tags ? formData.tags.split(',').map(s => s.trim()).filter(Boolean) : [],
       pickupRange,
       dateOfPurchase: formData.dateOfPurchase || undefined,
     };
 
+    delete data.grapeTypes;
     delete data.pickupRangeStart;
     delete data.pickupRangeEnd;
 
@@ -826,14 +854,57 @@ function ProductForm({ product, onSubmit, onClose }) {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Grape Types (comma-separated)"
-                    name="grapeType"
-                    value={formData.grapeType}
-                    onChange={handleChange}
-                    placeholder="e.g., Cabernet Sauvignon, Merlot"
-                  />
+                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                    זני ענבים
+                  </Typography>
+                  {availableGrapeTypes.length > 0 && (
+                    <Box sx={{ mb: 1 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        לחץ לבחירה:
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
+                        {availableGrapeTypes.map(grape => (
+                          <Chip
+                            key={grape}
+                            label={grape}
+                            size="small"
+                            onClick={() => handleGrapeTypeToggle(grape)}
+                            color={formData.grapeTypes.includes(grape) ? 'primary' : 'default'}
+                            variant={formData.grapeTypes.includes(grape) ? 'filled' : 'outlined'}
+                          />
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                  <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                    <TextField
+                      size="small"
+                      label="הוסף זן חדש"
+                      value={newGrapeType}
+                      onChange={(e) => setNewGrapeType(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddNewGrapeType())}
+                      sx={{ flexGrow: 1 }}
+                    />
+                    <Button variant="outlined" onClick={handleAddNewGrapeType} disabled={!newGrapeType.trim()}>
+                      הוסף
+                    </Button>
+                  </Box>
+                  {formData.grapeTypes.length > 0 && (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      <Typography variant="caption" color="text.secondary" sx={{ width: '100%' }}>
+                        נבחרו:
+                      </Typography>
+                      {formData.grapeTypes.map(grape => (
+                        <Chip
+                          key={grape}
+                          label={grape}
+                          size="small"
+                          onDelete={() => handleGrapeTypeToggle(grape)}
+                          color="primary"
+                        />
+                      ))}
+                    </Box>
+                  )}
                 </Grid>
               </>
             )}

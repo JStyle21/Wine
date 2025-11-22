@@ -102,4 +102,12 @@ export const api = {
     if (!response.ok) return [];
     return response.json();
   },
+
+  async getGrapeTypes() {
+    const response = await fetch(`${API_URL}/products/grape-types`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) return [];
+    return response.json();
+  },
 };
