@@ -28,7 +28,6 @@ const seedAdminUser = async () => {
     if (!existingAdmin) {
       const adminUser = new User({
         username: 'admin',
-        email: 'admin',
         password: '123wineqwe'
       });
       await adminUser.save();
