@@ -47,12 +47,10 @@ export const register: express.RequestHandler = async (req, res, next) => {
 
 export const login: express.RequestHandler = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    // Find user by email or username
-    const user = await User.findOne({
-      $or: [{ email }, { username: email }]
-    });
+    // Find user by username
+    const user = await User.findOne({ username });
     if (!user) {
       res.status(401).json({ message: 'Invalid credentials' });
       return;
