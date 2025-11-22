@@ -90,24 +90,71 @@ const getTheme = (mode) => createTheme({
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
   },
   components: {
-    MuiSelect: {
-      defaultProps: {
-        MenuProps: {
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'right',
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-input': {
+            textAlign: 'right',
+            // Hide number spinners
+            '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
+              WebkitAppearance: 'none',
+              margin: 0,
+            },
+            '&[type=number]': {
+              MozAppearance: 'textfield',
+            },
           },
-          transformOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
+          '& .MuiInputLabel-root': {
+            right: 28,
+            left: 'auto',
+            transformOrigin: 'top right',
+          },
+          '& .MuiInputLabel-shrink': {
+            right: 18,
+            left: 'auto',
+            transformOrigin: 'top right',
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            textAlign: 'right',
+          },
+          '& legend': {
+            textAlign: 'right',
           },
         },
       },
     },
-    MuiMenu: {
+    MuiFormControl: {
       styleOverrides: {
-        paper: {
-          direction: 'rtl',
+        root: {
+          '& .MuiInputLabel-root': {
+            right: 28,
+            left: 'auto',
+            transformOrigin: 'top right',
+          },
+          '& .MuiInputLabel-shrink': {
+            right: 18,
+            left: 'auto',
+            transformOrigin: 'top right',
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            textAlign: 'right',
+          },
+          '& legend': {
+            textAlign: 'right',
+          },
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        select: {
+          textAlign: 'right',
+          paddingRight: '14px !important',
+          paddingLeft: '32px !important',
+        },
+        icon: {
+          right: 'auto',
+          left: 7,
         },
       },
     },
@@ -116,44 +163,22 @@ const getTheme = (mode) => createTheme({
         root: {
           direction: 'rtl',
           textAlign: 'right',
+          justifyContent: 'flex-start',
         },
       },
     },
-    MuiInputLabel: {
+    MuiInputAdornment: {
       styleOverrides: {
-        root: {
-          right: 14,
-          left: 'auto',
-          transformOrigin: 'top right',
-          '&.MuiInputLabel-shrink': {
-            right: 14,
-            left: 'auto',
-          },
-        },
-      },
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        notchedOutline: {
-          textAlign: 'right',
-        },
-        input: {
-          textAlign: 'right',
-          // Hide number spinners
-          '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
-            WebkitAppearance: 'none',
-            margin: 0,
-          },
-          '&[type=number]': {
-            MozAppearance: 'textfield',
-          },
+        positionStart: {
+          marginRight: 0,
+          marginLeft: 8,
         },
       },
     },
     MuiFormControlLabel: {
       styleOverrides: {
         root: {
-          marginLeft: 0,
+          marginLeft: 16,
           marginRight: -11,
         },
       },
@@ -477,8 +502,8 @@ function App() {
           )}
 
           {/* Filters */}
-          <Paper sx={{ p: { xs: 1, sm: 2 }, mb: 2 }}>
-            <Grid container spacing={1} alignItems="center">
+          <Paper sx={{ p: { xs: 1, sm: 2 }, mb: 2 }} dir="rtl">
+            <Grid container spacing={1} alignItems="center" dir="rtl">
               <Grid item xs={12} sm={6} md={3}>
                 <TextField
                   fullWidth
@@ -968,15 +993,17 @@ function ProductForm({ product, onSubmit, onClose }) {
       onClose={onClose}
       maxWidth="sm"
       fullWidth
+      dir="rtl"
       PaperProps={{
         sx: {
           m: { xs: 1, sm: 2 },
           maxHeight: { xs: 'calc(100% - 16px)', sm: 'calc(100% - 64px)' },
-          width: { xs: 'calc(100% - 16px)', sm: 'auto' }
+          width: { xs: 'calc(100% - 16px)', sm: 'auto' },
+          direction: 'rtl',
         }
       }}
     >
-      <DialogTitle sx={{ pb: 1, fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
+      <DialogTitle sx={{ pb: 1, fontSize: { xs: '1.1rem', sm: '1.25rem' }, textAlign: 'right' }}>
         {product ? 'עריכת פריט' : 'הוספת פריט חדש'}
       </DialogTitle>
       <form onSubmit={handleSubmit}>
