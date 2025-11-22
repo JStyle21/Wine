@@ -32,7 +32,7 @@ services:
   mongodb:
     image: mongo:6.0 # Or mongo:latest, or a specific version you prefer
     ports:
-      - "27017:27017" # Expose MongoDB port to host (optional, for direct access/debugging)
+      - "27018:27017" # Expose MongoDB port to host (changed to 27018 to avoid conflict)
     volumes:
       - mongodb_data:/data/db # Persist MongoDB data
     restart: unless-stopped
