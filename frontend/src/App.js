@@ -93,20 +93,21 @@ const getTheme = (mode) => createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          right: '28px !important',
-          left: 'auto !important',
-          transformOrigin: 'top right !important',
+          // Use left values - RTL plugin will flip to right
+          left: '28px !important',
+          right: 'auto !important',
+          transformOrigin: 'top left !important',
           '&.MuiInputLabel-shrink': {
-            right: '18px !important',
-            left: 'auto !important',
+            left: '18px !important',
+            right: 'auto !important',
           },
         },
         outlined: {
-          right: '28px !important',
-          left: 'auto !important',
+          left: '28px !important',
+          right: 'auto !important',
           '&.MuiInputLabel-shrink': {
-            right: '18px !important',
-            left: 'auto !important',
+            left: '18px !important',
+            right: 'auto !important',
           },
         },
       },
@@ -119,7 +120,7 @@ const getTheme = (mode) => createTheme({
           },
           '& .MuiOutlinedInput-notchedOutline legend': {
             textAlign: 'right',
-            marginRight: '8px',
+            marginLeft: '8px',
           },
         },
         input: {
@@ -138,12 +139,12 @@ const getTheme = (mode) => createTheme({
       styleOverrides: {
         select: {
           textAlign: 'right',
-          paddingRight: '14px !important',
-          paddingLeft: '32px !important',
+          paddingLeft: '14px !important',
+          paddingRight: '32px !important',
         },
         icon: {
-          right: 'auto',
-          left: 7,
+          left: 'auto',
+          right: 7,
         },
       },
     },
@@ -159,16 +160,16 @@ const getTheme = (mode) => createTheme({
     MuiInputAdornment: {
       styleOverrides: {
         positionStart: {
-          marginRight: 0,
-          marginLeft: 8,
+          marginLeft: 0,
+          marginRight: 8,
         },
       },
     },
     MuiFormControlLabel: {
       styleOverrides: {
         root: {
-          marginLeft: 16,
-          marginRight: -11,
+          marginRight: 16,
+          marginLeft: -11,
         },
       },
     },
