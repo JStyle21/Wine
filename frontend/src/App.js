@@ -773,17 +773,16 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
     setError('');
     setLoading(true);
 
-    // Hardcoded credentials check
-    if (username === 'admin' && password === '123winqwe') {
-      // Create a mock token and user
-      const mockToken = 'hardcoded-admin-token-' + Date.now();
-      const mockUser = { username: 'admin', email: 'admin@local' };
-      localStorage.setItem('token', mockToken);
-      onSuccess(mockUser);
-    } else {
+    try {
+      // Use email field for login (backend expects email)
+      const data = await api.login(username, password);
+      localStorage.setItem('token', data.token);
+      onSuccess(data.user);
+    } catch (err) {
       setError('שם משתמש או סיסמה שגויים');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
