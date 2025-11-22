@@ -30,7 +30,7 @@ export const register: express.RequestHandler = async (req, res, next) => {
     await user.save();
 
     // Generate token
-    const token = generateToken(user._id.toString());
+    const token = generateToken(String(user._id));
 
     res.status(201).json({
       token,
@@ -64,7 +64,7 @@ export const login: express.RequestHandler = async (req, res, next) => {
     }
 
     // Generate token
-    const token = generateToken(user._id.toString());
+    const token = generateToken(String(user._id));
 
     res.json({
       token,
