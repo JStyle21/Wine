@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import productRoutes from './routes/productRoutes';
+import authRoutes from './routes/authRoutes';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json({ limit: '10mb' })); // Increased limit for base64 image up
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api', productRoutes);
 
 // Connect to MongoDB

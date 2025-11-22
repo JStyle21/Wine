@@ -21,6 +21,7 @@ services:
       NODE_ENV: production
       PORT: 5001
       MONGO_URI: mongodb://mongodb:27017/wineApp # 'mongodb' is the service name of the MongoDB container
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production # Change this in production!
       # Add any other backend environment variables here
     # env_file:
     #   - ./backend/.env # If you have a .env file in your backend directory

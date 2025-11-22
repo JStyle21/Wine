@@ -1,6 +1,46 @@
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  return {
+    'Content-Type': 'application/json',
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+};
+
 export const api = {
+  // Auth endpoints
+  async register(username, email, password) {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Registration failed');
+    return data;
+  },
+
+  async login(email, password) {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Login failed');
+    return data;
+  },
+
+  async getMe() {
+    const response = await fetch(`${API_URL}/auth/me`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error('Not authenticated');
+    return response.json();
+  },
+
+  // Product endpoints
   async getProducts(filters = {}) {
     const params = new URLSearchParams();
 
@@ -10,15 +50,20 @@ export const api = {
       }
     });
 
-    const response = await fetch(`${API_URL}/products?${params}`);
-    if (!response.ok) throw new Error('Failed to fetch products');
+    const response = await fetch(`${API_URL}/products?${params}`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) {
+      if (response.status === 401) throw new Error('Unauthorized');
+      throw new Error('Failed to fetch products');
+    }
     return response.json();
   },
 
   async createProduct(product) {
     const response = await fetch(`${API_URL}/products`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(product),
     });
     if (!response.ok) {
@@ -31,7 +76,7 @@ export const api = {
   async updateProduct(id, product) {
     const response = await fetch(`${API_URL}/products/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(product),
     });
     if (!response.ok) {
@@ -44,13 +89,16 @@ export const api = {
   async deleteProduct(id) {
     const response = await fetch(`${API_URL}/products/${id}`, {
       method: 'DELETE',
+      headers: getAuthHeaders(),
     });
     if (!response.ok) throw new Error('Failed to delete product');
     return response.json();
   },
 
   async getSuggestions(query) {
-    const response = await fetch(`${API_URL}/products/suggestions?q=${encodeURIComponent(query)}`);
+    const response = await fetch(`${API_URL}/products/suggestions?q=${encodeURIComponent(query)}`, {
+      headers: getAuthHeaders(),
+    });
     if (!response.ok) return [];
     return response.json();
   },
