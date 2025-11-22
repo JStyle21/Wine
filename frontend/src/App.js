@@ -53,6 +53,7 @@ import {
 } from '@mui/icons-material';
 
 const getTheme = (mode) => createTheme({
+  direction: 'rtl',
   palette: {
     mode,
     primary: {
@@ -80,10 +81,26 @@ const getTheme = (mode) => createTheme({
   },
 });
 
-const TYPES = ['Wine', 'Whisky', 'Vodka', 'Rum', 'Gin', 'Tequila', 'Brandy', 'Other'];
-const WINE_TYPES = ['Red', 'White', 'Rosé', 'Sparkling', 'Dessert', 'Fortified'];
-const COUNTRIES = ['France', 'Italy', 'Spain', 'USA', 'Argentina', 'Chile', 'Australia', 'Germany', 'Portugal', 'New Zealand', 'South Africa', 'Scotland', 'Ireland', 'Japan', 'Israel', 'Other'];
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const TYPES = ['יין', 'וויסקי', 'וודקה', 'רום', "ג'ין", 'טקילה', 'ברנדי', 'אחר'];
+const WINE_TYPES = ['אדום', 'לבן', 'רוזה', 'מבעבע', 'קינוח', 'מחוזק'];
+const COUNTRIES = [
+  'צרפת', 'איטליה', 'ספרד', 'פורטוגל', 'גרמניה', 'אוסטריה', 'יוון', 'הונגריה',
+  'ארה"ב', 'קנדה', 'מקסיקו',
+  'ארגנטינה', 'צ׳ילה', 'ברזיל', 'אורוגוואי', 'פרו',
+  'אוסטרליה', 'ניו זילנד',
+  'דרום אפריקה', 'מרוקו', 'טוניסיה', 'אלג׳יריה',
+  'ישראל', 'לבנון', 'טורקיה', 'גאורגיה', 'ארמניה',
+  'סקוטלנד', 'אירלנד', 'אנגליה', 'וויילס',
+  'יפן', 'סין', 'הודו', 'טייוואן', 'תאילנד',
+  'רוסיה', 'אוקראינה', 'פולין', 'צ׳כיה', 'סלובקיה', 'סלובניה', 'קרואטיה', 'סרביה', 'רומניה', 'בולגריה', 'מולדובה',
+  'שוויץ', 'בלגיה', 'הולנד', 'לוקסמבורג',
+  'קפריסין', 'מלטה',
+  'קובה', 'ג׳מייקה', 'ברבדוס', 'הרפובליקה הדומיניקנית', 'פוארטו ריקו',
+  'וונצואלה', 'קולומביה', 'פנמה',
+  'פיליפינים', 'אינדונזיה',
+  'אחר'
+];
+const MONTHS = ['ינו׳', 'פבר׳', 'מרץ', 'אפר׳', 'מאי', 'יוני', 'יולי', 'אוג׳', 'ספט׳', 'אוק׳', 'נוב׳', 'דצמ׳'];
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -187,7 +204,7 @@ function App() {
   };
 
   const handleDelete = async (product) => {
-    if (window.confirm(`Delete "${product.name}"?`)) {
+    if (window.confirm(`למחוק את "${product.name}"?`)) {
       try {
         await api.deleteProduct(product._id);
         fetchProducts();
@@ -252,19 +269,19 @@ function App() {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Wine & Spirit Tracker
+              מעקב יינות ומשקאות
             </Typography>
-            <Typography variant="body2" sx={{ mr: 2 }}>
-              Welcome, {user.username}
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              שלום, {user.username}
             </Typography>
-            <IconButton color="inherit" onClick={toggleDarkMode} title={mode === 'light' ? 'Dark mode' : 'Light mode'}>
+            <IconButton color="inherit" onClick={toggleDarkMode} title={mode === 'light' ? 'מצב כהה' : 'מצב בהיר'}>
               {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
             </IconButton>
             <Button color="inherit" startIcon={<LogoutIcon />} onClick={handleLogout}>
-              Logout
+              יציאה
             </Button>
-            <Button color="inherit" variant="outlined" startIcon={<AddIcon />} onClick={handleAddNew} sx={{ ml: 1 }}>
-              Add New
+            <Button color="inherit" variant="outlined" startIcon={<AddIcon />} onClick={handleAddNew} sx={{ mr: 1 }}>
+              הוסף חדש
             </Button>
           </Toolbar>
         </AppBar>
@@ -275,25 +292,25 @@ function App() {
             <Grid item xs={6} sm={3}>
               <Paper sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h4" color="primary">{stats.totalCount}</Typography>
-                <Typography variant="body2" color="text.secondary">Total Items</Typography>
+                <Typography variant="body2" color="text.secondary">סה״כ פריטים</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h4" color="primary">₪{stats.totalSpent.toFixed(2)}</Typography>
-                <Typography variant="body2" color="text.secondary">סה"כ הוצאות</Typography>
+                <Typography variant="body2" color="text.secondary">סה״כ הוצאות</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h4" color="primary">{stats.totalLiked}</Typography>
-                <Typography variant="body2" color="text.secondary">Favorites</Typography>
+                <Typography variant="body2" color="text.secondary">מועדפים</Typography>
               </Paper>
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h4" color="primary">{stats.totalItems}</Typography>
-                <Typography variant="body2" color="text.secondary">Bottles Bought</Typography>
+                <Typography variant="body2" color="text.secondary">בקבוקים שנקנו</Typography>
               </Paper>
             </Grid>
           </Grid>
@@ -301,7 +318,7 @@ function App() {
           {/* Yearly Stats */}
           {stats.yearlyStats.length > 0 && (
             <Paper sx={{ p: 2, mb: 3 }}>
-              <Typography variant="h6" gutterBottom>Spending by Year</Typography>
+              <Typography variant="h6" gutterBottom>הוצאות לפי שנה</Typography>
               <Grid container spacing={2}>
                 {stats.yearlyStats.map(year => (
                   <Grid item xs={6} sm={4} md={2} key={year._id}>
@@ -323,7 +340,7 @@ function App() {
                 <TextField
                   fullWidth
                   size="small"
-                  placeholder="Search..."
+                  placeholder="חיפוש..."
                   value={filters.search}
                   onChange={(e) => handleFilterChange('search', e.target.value)}
                   InputProps={{
@@ -337,28 +354,28 @@ function App() {
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>Type</InputLabel>
-                  <Select value={filters.type} label="Type" onChange={(e) => handleFilterChange('type', e.target.value)}>
-                    <MenuItem value="">All Types</MenuItem>
+                  <InputLabel>סוג</InputLabel>
+                  <Select value={filters.type} label="סוג" onChange={(e) => handleFilterChange('type', e.target.value)}>
+                    <MenuItem value="">כל הסוגים</MenuItem>
                     {TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>Country</InputLabel>
-                  <Select value={filters.country} label="Country" onChange={(e) => handleFilterChange('country', e.target.value)}>
-                    <MenuItem value="">All Countries</MenuItem>
+                  <InputLabel>ארץ</InputLabel>
+                  <Select value={filters.country} label="ארץ" onChange={(e) => handleFilterChange('country', e.target.value)}>
+                    <MenuItem value="">כל הארצות</MenuItem>
                     {COUNTRIES.map(country => <MenuItem key={country} value={country}>{country}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
-              {filters.type === 'Wine' && (
+              {filters.type === 'יין' && (
                 <Grid item xs={6} sm={3} md={2}>
                   <FormControl fullWidth size="small">
-                    <InputLabel>Wine Type</InputLabel>
-                    <Select value={filters.wineType} label="Wine Type" onChange={(e) => handleFilterChange('wineType', e.target.value)}>
-                      <MenuItem value="">All Wine Types</MenuItem>
+                    <InputLabel>סוג יין</InputLabel>
+                    <Select value={filters.wineType} label="סוג יין" onChange={(e) => handleFilterChange('wineType', e.target.value)}>
+                      <MenuItem value="">כל סוגי היין</MenuItem>
                       {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
                     </Select>
                   </FormControl>
@@ -366,59 +383,59 @@ function App() {
               )}
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>Favorites</InputLabel>
-                  <Select value={filters.fav} label="Favorites" onChange={(e) => handleFilterChange('fav', e.target.value)}>
-                    <MenuItem value="">All Items</MenuItem>
-                    <MenuItem value="true">Favorites Only</MenuItem>
+                  <InputLabel>מועדפים</InputLabel>
+                  <Select value={filters.fav} label="מועדפים" onChange={(e) => handleFilterChange('fav', e.target.value)}>
+                    <MenuItem value="">כל הפריטים</MenuItem>
+                    <MenuItem value="true">מועדפים בלבד</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>Status</InputLabel>
-                  <Select value={filters.purchased} label="Status" onChange={(e) => handleFilterChange('purchased', e.target.value)}>
-                    <MenuItem value="">All Status</MenuItem>
-                    <MenuItem value="true">Purchased</MenuItem>
-                    <MenuItem value="false">Wishlist</MenuItem>
+                  <InputLabel>סטטוס</InputLabel>
+                  <Select value={filters.purchased} label="סטטוס" onChange={(e) => handleFilterChange('purchased', e.target.value)}>
+                    <MenuItem value="">כל הסטטוסים</MenuItem>
+                    <MenuItem value="true">נרכש</MenuItem>
+                    <MenuItem value="false">רשימת משאלות</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>Reviewed</InputLabel>
-                  <Select value={filters.reviewed} label="Reviewed" onChange={(e) => handleFilterChange('reviewed', e.target.value)}>
-                    <MenuItem value="">All</MenuItem>
-                    <MenuItem value="true">Reviewed</MenuItem>
-                    <MenuItem value="false">Not Reviewed</MenuItem>
+                  <InputLabel>נסקר</InputLabel>
+                  <Select value={filters.reviewed} label="נסקר" onChange={(e) => handleFilterChange('reviewed', e.target.value)}>
+                    <MenuItem value="">הכל</MenuItem>
+                    <MenuItem value="true">נסקר</MenuItem>
+                    <MenuItem value="false">לא נסקר</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>Interested</InputLabel>
-                  <Select value={filters.interested} label="Interested" onChange={(e) => handleFilterChange('interested', e.target.value)}>
-                    <MenuItem value="">All</MenuItem>
-                    <MenuItem value="true">Interested</MenuItem>
+                  <InputLabel>מעוניין</InputLabel>
+                  <Select value={filters.interested} label="מעוניין" onChange={(e) => handleFilterChange('interested', e.target.value)}>
+                    <MenuItem value="">הכל</MenuItem>
+                    <MenuItem value="true">מעוניין</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>Sort By</InputLabel>
-                  <Select value={filters.sortBy} label="Sort By" onChange={(e) => handleFilterChange('sortBy', e.target.value)}>
-                    <MenuItem value="createdAt">Date Added</MenuItem>
-                    <MenuItem value="name">Name</MenuItem>
-                    <MenuItem value="price">Price</MenuItem>
-                    <MenuItem value="dateOfPurchase">Purchase Date</MenuItem>
+                  <InputLabel>מיון לפי</InputLabel>
+                  <Select value={filters.sortBy} label="מיון לפי" onChange={(e) => handleFilterChange('sortBy', e.target.value)}>
+                    <MenuItem value="createdAt">תאריך הוספה</MenuItem>
+                    <MenuItem value="name">שם</MenuItem>
+                    <MenuItem value="price">מחיר</MenuItem>
+                    <MenuItem value="dateOfPurchase">תאריך רכישה</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>Order</InputLabel>
-                  <Select value={filters.order} label="Order" onChange={(e) => handleFilterChange('order', e.target.value)}>
-                    <MenuItem value="desc">Descending</MenuItem>
-                    <MenuItem value="asc">Ascending</MenuItem>
+                  <InputLabel>סדר</InputLabel>
+                  <Select value={filters.order} label="סדר" onChange={(e) => handleFilterChange('order', e.target.value)}>
+                    <MenuItem value="desc">יורד</MenuItem>
+                    <MenuItem value="asc">עולה</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -434,7 +451,7 @@ function App() {
           ) : products.length === 0 ? (
             <Paper sx={{ p: 4, textAlign: 'center' }}>
               <Typography variant="h6" color="text.secondary">
-                No items found. Add your first bottle!
+                לא נמצאו פריטים. הוסף את הבקבוק הראשון!
               </Typography>
             </Paper>
           ) : (
@@ -456,9 +473,9 @@ function App() {
                         {product.name}
                       </Typography>
                       <Box sx={{ mb: 1 }}>
-                        <Chip label={product.type} size="small" color="primary" sx={{ mr: 0.5 }} />
-                        {product.country && <Chip label={product.country} size="small" variant="outlined" sx={{ mr: 0.5 }} />}
-                        {product.kosher && <Chip label="Kosher" size="small" color="secondary" />}
+                        <Chip label={product.type} size="small" color="primary" sx={{ ml: 0.5 }} />
+                        {product.country && <Chip label={product.country} size="small" variant="outlined" sx={{ ml: 0.5 }} />}
+                        {product.kosher && <Chip label="כשר" size="small" color="secondary" />}
                       </Box>
                       {product.wineType && (
                         <Typography variant="body2" color="text.secondary">{product.wineType}</Typography>
@@ -486,8 +503,8 @@ function App() {
                       )}
                       {product.pickupRange && (
                         <Typography variant="body2" sx={{ mt: 1 }}>
-                          Pickup: {product.pickupRange}
-                          {product.pickupStatus && <Chip label="Picked up" size="small" color="success" sx={{ ml: 1 }} />}
+                          איסוף: {product.pickupRange}
+                          {product.pickupStatus && <Chip label="נאסף" size="small" color="success" sx={{ mr: 1 }} />}
                         </Typography>
                       )}
                       {product.url && (
@@ -499,19 +516,19 @@ function App() {
                           rel="noopener noreferrer"
                           sx={{ mt: 1 }}
                         >
-                          View Product
+                          צפה במוצר
                         </Button>
                       )}
                       {product.tags && product.tags.length > 0 && (
                         <Box sx={{ mt: 1 }}>
                           {product.tags.map(tag => (
-                            <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ mr: 0.5, mb: 0.5 }} />
+                            <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ ml: 0.5, mb: 0.5 }} />
                           ))}
                         </Box>
                       )}
                       <Box sx={{ mt: 1 }}>
-                        {product.reviewed && <Chip label="Reviewed" size="small" color="info" sx={{ mr: 0.5 }} />}
-                        {product.interested && <Chip label="Interested" size="small" color="warning" />}
+                        {product.reviewed && <Chip label="נסקר" size="small" color="info" sx={{ ml: 0.5 }} />}
+                        {product.interested && <Chip label="מעוניין" size="small" color="warning" />}
                       </Box>
                     </CardContent>
                     <Divider />
@@ -521,7 +538,7 @@ function App() {
                           size="small"
                           onClick={() => handleToggleField(product, 'liked')}
                           color={product.liked ? 'primary' : 'default'}
-                          title="Favorite"
+                          title="מועדף"
                         >
                           {product.liked ? <StarIcon /> : <StarBorderIcon />}
                         </IconButton>
@@ -529,7 +546,7 @@ function App() {
                           size="small"
                           onClick={() => handleToggleField(product, 'bought')}
                           color={product.bought ? 'success' : 'default'}
-                          title="Purchased"
+                          title="נרכש"
                         >
                           {product.bought ? <CheckCircleIcon /> : <UncheckedIcon />}
                         </IconButton>
@@ -537,7 +554,7 @@ function App() {
                           size="small"
                           onClick={() => handleToggleField(product, 'reviewed')}
                           color={product.reviewed ? 'info' : 'default'}
-                          title="Reviewed"
+                          title="נסקר"
                         >
                           <ReviewIcon />
                         </IconButton>
@@ -545,16 +562,16 @@ function App() {
                           size="small"
                           onClick={() => handleToggleField(product, 'interested')}
                           color={product.interested ? 'warning' : 'default'}
-                          title="Interested"
+                          title="מעוניין"
                         >
                           <BookmarkIcon />
                         </IconButton>
                       </Box>
                       <Box>
-                        <IconButton size="small" onClick={() => handleEdit(product)} title="Edit">
+                        <IconButton size="small" onClick={() => handleEdit(product)} title="עריכה">
                           <EditIcon />
                         </IconButton>
-                        <IconButton size="small" onClick={() => handleDelete(product)} color="error" title="Delete">
+                        <IconButton size="small" onClick={() => handleDelete(product)} color="error" title="מחיקה">
                           <DeleteIcon />
                         </IconButton>
                       </Box>
@@ -620,17 +637,17 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
     >
       <IconButton
         onClick={toggleDarkMode}
-        sx={{ position: 'absolute', top: 16, right: 16 }}
-        title={mode === 'light' ? 'Dark mode' : 'Light mode'}
+        sx={{ position: 'absolute', top: 16, left: 16 }}
+        title={mode === 'light' ? 'מצב כהה' : 'מצב בהיר'}
       >
         {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
       </IconButton>
       <Paper sx={{ p: 4, maxWidth: 400, width: '100%', mx: 2 }}>
         <Typography variant="h4" component="h1" align="center" gutterBottom color="primary">
-          Wine & Spirit Tracker
+          מעקב יינות ומשקאות
         </Typography>
         <Typography variant="h6" align="center" gutterBottom>
-          {isLogin ? 'Login' : 'Register'}
+          {isLogin ? 'התחברות' : 'הרשמה'}
         </Typography>
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -639,7 +656,7 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
           {!isLogin && (
             <TextField
               fullWidth
-              label="Username"
+              label="שם משתמש"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required={!isLogin}
@@ -649,7 +666,7 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
           )}
           <TextField
             fullWidth
-            label="Email"
+            label="אימייל"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -658,7 +675,7 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
           />
           <TextField
             fullWidth
-            label="Password"
+            label="סיסמה"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -674,15 +691,15 @@ function AuthForm({ onSuccess, mode, toggleDarkMode }) {
             disabled={loading}
             sx={{ mt: 2 }}
           >
-            {loading ? <CircularProgress size={24} /> : (isLogin ? 'Login' : 'Register')}
+            {loading ? <CircularProgress size={24} /> : (isLogin ? 'התחברות' : 'הרשמה')}
           </Button>
         </form>
 
         <Box sx={{ mt: 2, textAlign: 'center' }}>
           <Typography variant="body2">
-            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            {isLogin ? "אין לך חשבון? " : "כבר יש לך חשבון? "}
             <Button onClick={() => setIsLogin(!isLogin)} size="small">
-              {isLogin ? 'Register' : 'Login'}
+              {isLogin ? 'הרשמה' : 'התחברות'}
             </Button>
           </Typography>
         </Box>
@@ -802,7 +819,7 @@ function ProductForm({ product, onSubmit, onClose }) {
   return (
     <Dialog open onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
-        {product ? 'Edit Item' : 'Add New Item'}
+        {product ? 'עריכת פריט' : 'הוספת פריט חדש'}
       </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>
@@ -810,7 +827,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Name"
+                label="שם"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
@@ -820,29 +837,29 @@ function ProductForm({ product, onSubmit, onClose }) {
 
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>Type</InputLabel>
-                <Select name="type" value={formData.type} label="Type" onChange={handleChange}>
+                <InputLabel>סוג</InputLabel>
+                <Select name="type" value={formData.type} label="סוג" onChange={handleChange}>
                   {TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>Country</InputLabel>
-                <Select name="country" value={formData.country} label="Country" onChange={handleChange}>
-                  <MenuItem value="">Select...</MenuItem>
+                <InputLabel>ארץ</InputLabel>
+                <Select name="country" value={formData.country} label="ארץ" onChange={handleChange}>
+                  <MenuItem value="">בחר...</MenuItem>
                   {COUNTRIES.map(country => <MenuItem key={country} value={country}>{country}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
 
-            {formData.type === 'Wine' && (
+            {formData.type === 'יין' && (
               <>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel>Wine Type</InputLabel>
-                    <Select name="wineType" value={formData.wineType} label="Wine Type" onChange={handleChange}>
-                      <MenuItem value="">Select...</MenuItem>
+                    <InputLabel>סוג יין</InputLabel>
+                    <Select name="wineType" value={formData.wineType} label="סוג יין" onChange={handleChange}>
+                      <MenuItem value="">בחר...</MenuItem>
                       {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
                     </Select>
                   </FormControl>
@@ -850,7 +867,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 <Grid item xs={12} sm={6} sx={{ display: 'flex', alignItems: 'center' }}>
                   <FormControlLabel
                     control={<Checkbox name="kosher" checked={formData.kosher} onChange={handleChange} />}
-                    label="Kosher"
+                    label="כשר"
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -912,7 +929,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Description"
+                label="תיאור"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -958,7 +975,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Date of Purchase"
+                label="תאריך רכישה"
                 name="dateOfPurchase"
                 type="date"
                 value={formData.dateOfPurchase}
@@ -969,18 +986,18 @@ function ProductForm({ product, onSubmit, onClose }) {
 
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>Pickup Range Start</InputLabel>
-                <Select name="pickupRangeStart" value={formData.pickupRangeStart} label="Pickup Range Start" onChange={handleChange}>
-                  <MenuItem value="">Select...</MenuItem>
+                <InputLabel>התחלת טווח איסוף</InputLabel>
+                <Select name="pickupRangeStart" value={formData.pickupRangeStart} label="התחלת טווח איסוף" onChange={handleChange}>
+                  <MenuItem value="">בחר...</MenuItem>
                   {MONTHS.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>Pickup Range End</InputLabel>
-                <Select name="pickupRangeEnd" value={formData.pickupRangeEnd} label="Pickup Range End" onChange={handleChange}>
-                  <MenuItem value="">Select...</MenuItem>
+                <InputLabel>סיום טווח איסוף</InputLabel>
+                <Select name="pickupRangeEnd" value={formData.pickupRangeEnd} label="סיום טווח איסוף" onChange={handleChange}>
+                  <MenuItem value="">בחר...</MenuItem>
                   {MONTHS.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
                 </Select>
               </FormControl>
@@ -989,7 +1006,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Product URL"
+                label="קישור למוצר"
                 name="url"
                 type="url"
                 value={formData.url}
@@ -1001,22 +1018,22 @@ function ProductForm({ product, onSubmit, onClose }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Tags (comma-separated)"
+                label="תגיות (מופרדות בפסיק)"
                 name="tags"
                 value={formData.tags}
                 onChange={handleChange}
-                placeholder="e.g., gift, special occasion"
+                placeholder="לדוגמה: מתנה, אירוע מיוחד"
               />
             </Grid>
 
             <Grid item xs={12}>
               <Button variant="outlined" component="label" fullWidth>
-                Upload Image
+                העלאת תמונה
                 <input type="file" accept="image/*" hidden onChange={handleImageChange} />
               </Button>
               {formData.picture && (
                 <Box sx={{ mt: 2, textAlign: 'center' }}>
-                  <img src={formData.picture} alt="Preview" style={{ maxWidth: '100%', maxHeight: 200 }} />
+                  <img src={formData.picture} alt="תצוגה מקדימה" style={{ maxWidth: '100%', maxHeight: 200 }} />
                 </Box>
               )}
             </Grid>
@@ -1025,31 +1042,31 @@ function ProductForm({ product, onSubmit, onClose }) {
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
                 <FormControlLabel
                   control={<Checkbox name="liked" checked={formData.liked} onChange={handleChange} />}
-                  label="Favorite"
+                  label="מועדף"
                 />
                 <FormControlLabel
                   control={<Checkbox name="bought" checked={formData.bought} onChange={handleChange} />}
-                  label="Purchased"
+                  label="נרכש"
                 />
                 <FormControlLabel
                   control={<Checkbox name="pickupStatus" checked={formData.pickupStatus} onChange={handleChange} />}
-                  label="Picked Up"
+                  label="נאסף"
                 />
                 <FormControlLabel
                   control={<Checkbox name="reviewed" checked={formData.reviewed} onChange={handleChange} />}
-                  label="Reviewed"
+                  label="נסקר"
                 />
                 <FormControlLabel
                   control={<Checkbox name="interested" checked={formData.interested} onChange={handleChange} />}
-                  label="Interested"
+                  label="מעוניין"
                 />
               </Box>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button type="submit" variant="contained">{product ? 'Save Changes' : 'Add Item'}</Button>
+          <Button onClick={onClose}>ביטול</Button>
+          <Button type="submit" variant="contained">{product ? 'שמור שינויים' : 'הוסף פריט'}</Button>
         </DialogActions>
       </form>
     </Dialog>
