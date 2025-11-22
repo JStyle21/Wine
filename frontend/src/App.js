@@ -332,24 +332,28 @@ function App() {
         <CssBaseline />
         <Box dir="rtl" sx={{ flexGrow: 1 }}>
           <AppBar position="static">
-            <Toolbar sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' }, gap: 1 }}>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
-                מעקב יינות ומשקאות
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Toolbar sx={{ flexWrap: 'wrap', gap: 1, py: 1 }}>
+              {/* First row: Title, user info, and logout */}
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 1 }}>
+                <Typography variant="h6" component="div" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                  מעקב יינות ומשקאות
+                </Typography>
                 <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                  שלום, {user.username}
+                  | שלום, {user.username}
                 </Typography>
                 <IconButton color="inherit" onClick={toggleDarkMode} title={mode === 'light' ? 'מצב כהה' : 'מצב בהיר'} size="small">
                   {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
                 </IconButton>
+                <Box sx={{ flexGrow: 1 }} />
                 <Button color="inherit" onClick={handleLogout} size="small" sx={{ minWidth: 'auto', px: { xs: 1, sm: 2 } }}>
                   <LogoutIcon sx={{ display: { xs: 'block', sm: 'none' } }} />
                   <Box component="span" sx={{ display: { xs: 'none', sm: 'block' } }}>יציאה</Box>
                 </Button>
-                <Button color="inherit" variant="outlined" onClick={handleAddNew} size="small" sx={{ minWidth: 'auto', px: { xs: 1, sm: 2 } }}>
-                  <AddIcon sx={{ display: { xs: 'block', sm: 'none' } }} />
-                  <Box component="span" sx={{ display: { xs: 'none', sm: 'block' } }}>הוסף חדש</Box>
+              </Box>
+              {/* Second row: Add button */}
+              <Box sx={{ width: '100%' }}>
+                <Button color="inherit" variant="outlined" onClick={handleAddNew} size="small" startIcon={<AddIcon />}>
+                  הוסף חדש
                 </Button>
               </Box>
             </Toolbar>
