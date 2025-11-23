@@ -138,14 +138,13 @@ const getTheme = (mode) => createTheme({
     MuiSelect: {
       styleOverrides: {
         select: {
-          direction: 'rtl',
-          textAlign: 'right',
-          paddingLeft: '32px !important',
-          paddingRight: '14px !important',
+          textAlign: 'left',
+          paddingRight: '32px !important',
+          paddingLeft: '14px !important',
         },
         icon: {
-          left: 7,
-          right: 'auto',
+          right: 7,
+          left: 'auto',
         },
       },
     },
