@@ -1010,7 +1010,7 @@ function ProductForm({ product, onSubmit, onClose }) {
               <>
                 <Grid item xs={12}>
                   <FormControl fullWidth size="small">
-                    <InputLabel sx={{ '&.MuiInputLabel-shrink': { left: '10px !important', right: 'auto !important' } }}>סוג יין</InputLabel>
+                    <InputLabel sx={{ '&.MuiInputLabel-shrink': { left: '234px !important', right: 'auto !important' } }}>סוג יין</InputLabel>
                     <Select name="wineType" value={formData.wineType} label="סוג יין" onChange={handleChange}>
                       <MenuItem value="">בחר...</MenuItem>
                       {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, WINE_TYPE_LABELS)}</MenuItem>)}
@@ -1120,7 +1120,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 type="date"
                 value={formData.dateOfPurchase}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true, sx: { '&.MuiInputLabel-shrink': { left: '10px !important', right: 'auto !important' } } }}
+                InputLabelProps={{ shrink: true, sx: { '&.MuiInputLabel-shrink': { left: '184px !important', right: 'auto !important' } } }}
                 inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
@@ -1134,7 +1134,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 type="date"
                 value={formData.pickupDate}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true, sx: { '&.MuiInputLabel-shrink': { left: '10px !important', right: 'auto !important' } } }}
+                InputLabelProps={{ shrink: true, sx: { '&.MuiInputLabel-shrink': { left: '184px !important', right: 'auto !important' } } }}
                 inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
