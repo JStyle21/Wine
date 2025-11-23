@@ -294,6 +294,10 @@ function App() {
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [showOrders, setShowOrders] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [orderStats, setOrderStats] = useState({ totalOrders: 0, pendingOrders: 0, collectedOrders: 0, totalSpent: 0 });
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [editingOrder, setEditingOrder] = useState(null);
   const [filters, setFilters] = useState({
     search: '',
     type: '',
@@ -352,6 +356,24 @@ function App() {
     if (user) fetchProducts();
   }, [fetchProducts, user]);
 
+  const fetchOrders = useCallback(async () => {
+    if (!user) return;
+    try {
+      const data = await api.getOrders();
+      setOrders(data.orders || []);
+      setOrderStats(data.stats || { totalOrders: 0, pendingOrders: 0, collectedOrders: 0, totalSpent: 0 });
+    } catch (err) {
+      if (err.message === 'Unauthorized') {
+        localStorage.removeItem('token');
+        setUser(null);
+      }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && showOrders) fetchOrders();
+  }, [fetchOrders, user, showOrders]);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     setUser(null);
@@ -406,6 +428,57 @@ function App() {
     try {
       await api.updateProduct(product._id, { [field]: !product[field] });
       fetchProducts();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  // Order handlers
+  const handleAddOrder = () => {
+    setEditingOrder(null);
+    setShowOrderForm(true);
+  };
+
+  const handleEditOrder = (order) => {
+    setEditingOrder(order);
+    setShowOrderForm(true);
+  };
+
+  const handleDeleteOrder = async (order) => {
+    if (window.confirm(`למחוק הזמנה "${order.orderNumber}"?`)) {
+      try {
+        await api.deleteOrder(order._id);
+        fetchOrders();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+  };
+
+  const handleOrderFormClose = () => {
+    setShowOrderForm(false);
+    setEditingOrder(null);
+  };
+
+  const handleOrderFormSubmit = async (orderData) => {
+    try {
+      if (editingOrder) {
+        await api.updateOrder(editingOrder._id, orderData);
+      } else {
+        await api.createOrder(orderData);
+      }
+      handleOrderFormClose();
+      fetchOrders();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleToggleOrderStatus = async (order) => {
+    try {
+      const newStatus = order.status === 'pending' ? 'collected' : 'pending';
+      await api.updateOrder(order._id, { status: newStatus });
+      fetchOrders();
     } catch (err) {
       alert(err.message);
     }
@@ -482,67 +555,113 @@ function App() {
 
         <Container maxWidth="xl" sx={{ mt: 2, mb: 3, px: { xs: 1, sm: 2, md: 3 } }}>
           {showOrders ? (
-            /* Orders View - Collected Items */
+            /* Orders View */
             <>
-              <Typography variant="h5" sx={{ mb: 2, textAlign: 'right' }}>הזמנות שנאספו</Typography>
-              {loading ? (
-                <Box display="flex" justifyContent="center" py={4}>
-                  <CircularProgress />
-                </Box>
-              ) : products.filter(p => p.pickupStatus).length === 0 ? (
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h5" sx={{ textAlign: 'right' }}>הזמנות</Typography>
+                <Button variant="contained" onClick={handleAddOrder} startIcon={<AddIcon />} size="small">
+                  הזמנה חדשה
+                </Button>
+              </Box>
+
+              {/* Order Stats */}
+              <Grid container spacing={1} sx={{ mb: 2 }}>
+                <Grid item xs={6} sm={3}>
+                  <Paper sx={{ p: { xs: 1, sm: 2 }, textAlign: 'center' }}>
+                    <Typography variant="h5" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} color="primary">{orderStats.totalOrders}</Typography>
+                    <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }} color="text.secondary">סה״כ הזמנות</Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <Paper sx={{ p: { xs: 1, sm: 2 }, textAlign: 'center' }}>
+                    <Typography variant="h5" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} color="warning.main">{orderStats.pendingOrders}</Typography>
+                    <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }} color="text.secondary">ממתינות</Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <Paper sx={{ p: { xs: 1, sm: 2 }, textAlign: 'center' }}>
+                    <Typography variant="h5" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} color="success.main">{orderStats.collectedOrders}</Typography>
+                    <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }} color="text.secondary">נאספו</Typography>
+                  </Paper>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <Paper sx={{ p: { xs: 1, sm: 2 }, textAlign: 'center' }}>
+                    <Typography variant="h5" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} color="primary">₪{orderStats.totalSpent.toFixed(0)}</Typography>
+                    <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }} color="text.secondary">סה״כ</Typography>
+                  </Paper>
+                </Grid>
+              </Grid>
+
+              {orders.length === 0 ? (
                 <Paper sx={{ p: 4, textAlign: 'center' }}>
                   <Typography variant="h6" color="text.secondary">
-                    אין הזמנות שנאספו
+                    אין הזמנות. הוסף הזמנה חדשה!
                   </Typography>
                 </Paper>
               ) : (
                 <Grid container spacing={{ xs: 1, sm: 2, md: 3 }}>
-                  {products.filter(p => p.pickupStatus).map(product => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
+                  {orders.map(order => (
+                    <Grid item xs={12} sm={6} md={4} key={order._id}>
                       <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        {product.picture && (
-                          <CardMedia
-                            component="img"
-                            height="200"
-                            image={product.picture}
-                            alt={product.name}
-                            sx={{ objectFit: 'cover' }}
-                          />
-                        )}
                         <CardContent sx={{ flexGrow: 1 }}>
-                          <Typography variant="h6" component="div" gutterBottom>
-                            {product.name}
-                          </Typography>
-                          <Box sx={{ mb: 1 }}>
-                            <Chip label={getLabel(product.type, TYPE_LABELS)} size="small" color="primary" sx={{ ml: 0.5 }} />
-                            {product.country && <Chip label={getLabel(product.country, COUNTRY_LABELS)} size="small" variant="outlined" sx={{ ml: 0.5 }} />}
-                            <Chip label="נאסף" size="small" color="success" sx={{ ml: 0.5 }} />
-                          </Box>
-                          {product.wineType && (
-                            <Typography variant="body2" color="text.secondary">{getLabel(product.wineType, WINE_TYPE_LABELS)}</Typography>
-                          )}
-                          <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
-                            ₪{product.price ? product.price.toFixed(2) : '0.00'}
-                          </Typography>
-                          {product.pickupRange && (
-                            <Typography variant="body2" sx={{ mt: 1 }}>
-                              טווח איסוף: {product.pickupRange}
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                            <Typography variant="h6" component="div">
+                              #{order.orderNumber}
                             </Typography>
-                          )}
-                          {product.dateOfPurchase && (
-                            <Typography variant="body2" color="text.secondary">
-                              נרכש: {new Date(product.dateOfPurchase).toLocaleDateString('he-IL')}
+                            <Chip
+                              label={order.status === 'collected' ? 'נאסף' : order.status === 'cancelled' ? 'בוטל' : 'ממתין'}
+                              size="small"
+                              color={order.status === 'collected' ? 'success' : order.status === 'cancelled' ? 'error' : 'warning'}
+                            />
+                          </Box>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                            {new Date(order.orderDate).toLocaleDateString('he-IL')}
+                          </Typography>
+                          <Divider sx={{ my: 1 }} />
+                          <Typography variant="body2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                            פריטים ({order.items.length}):
+                          </Typography>
+                          {order.items.map((item, idx) => (
+                            <Box key={idx} sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                              <Typography variant="body2">
+                                {item.product?.name || 'פריט לא זמין'} x{item.quantity}
+                              </Typography>
+                              <Typography variant="body2">
+                                ₪{(item.priceAtOrder * item.quantity).toFixed(2)}
+                              </Typography>
+                            </Box>
+                          ))}
+                          <Divider sx={{ my: 1 }} />
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant="body1" fontWeight="bold">סה״כ:</Typography>
+                            <Typography variant="body1" fontWeight="bold" color="primary">
+                              ₪{order.totalPrice.toFixed(2)}
+                            </Typography>
+                          </Box>
+                          {order.notes && (
+                            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontStyle: 'italic' }}>
+                              {order.notes}
                             </Typography>
                           )}
                         </CardContent>
                         <Divider />
-                        <CardActions sx={{ justifyContent: 'flex-end' }}>
-                          <IconButton size="small" onClick={() => handleEdit(product)} title="עריכה">
-                            <EditIcon />
+                        <CardActions sx={{ justifyContent: 'space-between' }}>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleToggleOrderStatus(order)}
+                            color={order.status === 'collected' ? 'success' : 'default'}
+                            title={order.status === 'collected' ? 'סמן כממתין' : 'סמן כנאסף'}
+                          >
+                            {order.status === 'collected' ? <CheckCircleIcon /> : <UncheckedIcon />}
                           </IconButton>
-                          <IconButton size="small" onClick={() => handleDelete(product)} color="error" title="מחיקה">
-                            <DeleteIcon />
-                          </IconButton>
+                          <Box>
+                            <IconButton size="small" onClick={() => handleEditOrder(order)} title="עריכה">
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton size="small" onClick={() => handleDeleteOrder(order)} color="error" title="מחיקה">
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
                         </CardActions>
                       </Card>
                     </Grid>
@@ -847,6 +966,15 @@ function App() {
             product={editingProduct}
             onSubmit={handleFormSubmit}
             onClose={handleFormClose}
+          />
+        )}
+
+        {showOrderForm && (
+          <OrderForm
+            order={editingOrder}
+            products={products}
+            onSubmit={handleOrderFormSubmit}
+            onClose={handleOrderFormClose}
           />
         )}
       </Box>
@@ -1303,6 +1431,235 @@ function ProductForm({ product, onSubmit, onClose }) {
         <DialogActions sx={{ px: 2, py: 1.5 }}>
           <Button onClick={onClose} size="small" color="inherit" sx={{ color: 'text.primary' }}>ביטול</Button>
           <Button type="submit" variant="contained" size="small" color="primary">{product ? 'שמור' : 'הוסף'}</Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  );
+}
+
+function OrderForm({ order, products, onSubmit, onClose }) {
+  const [formData, setFormData] = useState({
+    orderNumber: order?.orderNumber || '',
+    orderDate: order?.orderDate ? new Date(order.orderDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    notes: order?.notes || '',
+    status: order?.status || 'pending',
+  });
+
+  const [selectedItems, setSelectedItems] = useState(
+    order?.items?.map(item => ({
+      productId: item.product?._id || item.product,
+      quantity: item.quantity || 1
+    })) || []
+  );
+
+  const [selectedProduct, setSelectedProduct] = useState('');
+  const [quantity, setQuantity] = useState(1);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddItem = () => {
+    if (!selectedProduct) return;
+
+    const existing = selectedItems.find(item => item.productId === selectedProduct);
+    if (existing) {
+      setSelectedItems(prev =>
+        prev.map(item =>
+          item.productId === selectedProduct
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        )
+      );
+    } else {
+      setSelectedItems(prev => [...prev, { productId: selectedProduct, quantity }]);
+    }
+
+    setSelectedProduct('');
+    setQuantity(1);
+  };
+
+  const handleRemoveItem = (productId) => {
+    setSelectedItems(prev => prev.filter(item => item.productId !== productId));
+  };
+
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity < 1) return;
+    setSelectedItems(prev =>
+      prev.map(item =>
+        item.productId === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
+  const getProductById = (id) => products.find(p => p._id === id);
+
+  const calculateTotal = () => {
+    return selectedItems.reduce((sum, item) => {
+      const product = getProductById(item.productId);
+      return sum + (product?.price || 0) * item.quantity;
+    }, 0);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (selectedItems.length === 0) {
+      alert('יש להוסיף לפחות פריט אחד');
+      return;
+    }
+
+    onSubmit({
+      ...formData,
+      items: selectedItems,
+    });
+  };
+
+  return (
+    <Dialog
+      open
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      dir="rtl"
+      PaperProps={{
+        sx: {
+          m: { xs: 1, sm: 2 },
+          maxHeight: { xs: 'calc(100% - 16px)', sm: 'calc(100% - 64px)' },
+          width: { xs: 'calc(100% - 16px)', sm: 'auto' },
+          direction: 'rtl',
+        }
+      }}
+    >
+      <DialogTitle sx={{ pb: 1, fontSize: { xs: '1.1rem', sm: '1.25rem' }, textAlign: 'right' }}>
+        {order ? 'עריכת הזמנה' : 'הזמנה חדשה'}
+      </DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent dividers sx={{ p: { xs: 1.5, sm: 2 } }}>
+          <Grid container spacing={1.5}>
+            <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>מספר הזמנה</Typography>
+              <TextField
+                fullWidth
+                size="small"
+                name="orderNumber"
+                value={formData.orderNumber}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>תאריך</Typography>
+              <TextField
+                fullWidth
+                size="small"
+                name="orderDate"
+                type="date"
+                value={formData.orderDate}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>סטטוס</Typography>
+              <FormControl fullWidth size="small">
+                <Select name="status" value={formData.status} onChange={handleChange}>
+                  <MenuItem value="pending">ממתין</MenuItem>
+                  <MenuItem value="collected">נאסף</MenuItem>
+                  <MenuItem value="cancelled">בוטל</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider sx={{ my: 1 }} />
+              <Typography variant="body2" fontWeight="bold" sx={{ mb: 1, textAlign: 'left' }}>הוספת פריטים</Typography>
+              <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                <FormControl sx={{ flexGrow: 1 }} size="small">
+                  <Select
+                    value={selectedProduct}
+                    onChange={(e) => setSelectedProduct(e.target.value)}
+                    displayEmpty
+                  >
+                    <MenuItem value="">בחר פריט</MenuItem>
+                    {products.map(product => (
+                      <MenuItem key={product._id} value={product._id}>
+                        {product.name} - ₪{product.price?.toFixed(2) || '0.00'}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <TextField
+                  size="small"
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  inputProps={{ min: 1 }}
+                  sx={{ width: 70 }}
+                />
+                <Button variant="outlined" onClick={handleAddItem} disabled={!selectedProduct} size="small">
+                  הוסף
+                </Button>
+              </Box>
+            </Grid>
+
+            {selectedItems.length > 0 && (
+              <Grid item xs={12}>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1, textAlign: 'left' }}>פריטים בהזמנה:</Typography>
+                {selectedItems.map(item => {
+                  const product = getProductById(item.productId);
+                  if (!product) return null;
+                  return (
+                    <Box key={item.productId} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1, p: 1, bgcolor: 'action.hover', borderRadius: 1 }}>
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Typography variant="body2">{product.name}</Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          ₪{product.price?.toFixed(2)} x {item.quantity} = ₪{(product.price * item.quantity).toFixed(2)}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <IconButton size="small" onClick={() => handleQuantityChange(item.productId, item.quantity - 1)}>
+                          -
+                        </IconButton>
+                        <Typography variant="body2">{item.quantity}</Typography>
+                        <IconButton size="small" onClick={() => handleQuantityChange(item.productId, item.quantity + 1)}>
+                          +
+                        </IconButton>
+                        <IconButton size="small" color="error" onClick={() => handleRemoveItem(item.productId)}>
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </Box>
+                  );
+                })}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1, pt: 1, borderTop: 1, borderColor: 'divider' }}>
+                  <Typography variant="body1" fontWeight="bold">סה״כ:</Typography>
+                  <Typography variant="body1" fontWeight="bold" color="primary">
+                    ₪{calculateTotal().toFixed(2)}
+                  </Typography>
+                </Box>
+              </Grid>
+            )}
+
+            <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>הערות</Typography>
+              <TextField
+                fullWidth
+                size="small"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                multiline
+                rows={2}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions sx={{ px: 2, py: 1.5 }}>
+          <Button onClick={onClose} size="small" color="inherit" sx={{ color: 'text.primary' }}>ביטול</Button>
+          <Button type="submit" variant="contained" size="small" color="primary">{order ? 'שמור' : 'צור הזמנה'}</Button>
         </DialogActions>
       </form>
     </Dialog>

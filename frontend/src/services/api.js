@@ -110,4 +110,58 @@ export const api = {
     if (!response.ok) return [];
     return response.json();
   },
+
+  // Order endpoints
+  async getOrders(filters = {}) {
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== '' && value !== null) {
+        params.append(key, value);
+      }
+    });
+
+    const response = await fetch(`${API_URL}/orders?${params}`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) {
+      if (response.status === 401) throw new Error('Unauthorized');
+      throw new Error('Failed to fetch orders');
+    }
+    return response.json();
+  },
+
+  async createOrder(order) {
+    const response = await fetch(`${API_URL}/orders`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(order),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to create order');
+    }
+    return response.json();
+  },
+
+  async updateOrder(id, order) {
+    const response = await fetch(`${API_URL}/orders/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(order),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to update order');
+    }
+    return response.json();
+  },
+
+  async deleteOrder(id) {
+    const response = await fetch(`${API_URL}/orders/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error('Failed to delete order');
+    return response.json();
+  },
 };

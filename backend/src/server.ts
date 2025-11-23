@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import productRoutes from './routes/productRoutes';
 import authRoutes from './routes/authRoutes';
+import orderRoutes from './routes/orderRoutes';
 import User from './models/User';
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api', productRoutes);
+app.use('/api', orderRoutes);
 
 // Seed admin user
 const seedAdminUser = async () => {
