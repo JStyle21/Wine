@@ -1120,7 +1120,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 type="date"
                 value={formData.dateOfPurchase}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true, sx: { '&.MuiInputLabel-shrink': { left: '10px !important', right: 'auto !important' } } }}
                 inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
@@ -1134,7 +1134,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 type="date"
                 value={formData.pickupDate}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true, sx: { '&.MuiInputLabel-shrink': { left: '10px !important', right: 'auto !important' } } }}
                 inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
