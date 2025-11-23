@@ -54,6 +54,8 @@ import {
   Bookmark as BookmarkIcon,
   DarkMode as DarkModeIcon,
   LightMode as LightModeIcon,
+  LocalShipping as OrdersIcon,
+  ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 
 // Create RTL cache
@@ -291,6 +293,7 @@ function App() {
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [showOrders, setShowOrders] = useState(false);
   const [filters, setFilters] = useState({
     search: '',
     type: '',
@@ -458,16 +461,97 @@ function App() {
                   {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
                 </IconButton>
               </Box>
-              {/* Second row: Add button */}
-              <Box sx={{ width: '100%' }}>
+              {/* Second row: Add button and Orders */}
+              <Box sx={{ width: '100%', display: 'flex', gap: 1 }}>
                 <Button color="inherit" variant="outlined" onClick={handleAddNew} size="small" startIcon={<AddIcon />}>
                   הוסף חדש
+                </Button>
+                <Button
+                  color="inherit"
+                  variant={showOrders ? "contained" : "outlined"}
+                  onClick={() => setShowOrders(!showOrders)}
+                  size="small"
+                  startIcon={showOrders ? <ArrowBackIcon /> : <OrdersIcon />}
+                  sx={showOrders ? { bgcolor: 'primary.dark' } : {}}
+                >
+                  {showOrders ? 'חזרה' : 'הזמנות'}
                 </Button>
               </Box>
             </Toolbar>
           </AppBar>
 
         <Container maxWidth="xl" sx={{ mt: 2, mb: 3, px: { xs: 1, sm: 2, md: 3 } }}>
+          {showOrders ? (
+            /* Orders View - Collected Items */
+            <>
+              <Typography variant="h5" sx={{ mb: 2, textAlign: 'right' }}>הזמנות שנאספו</Typography>
+              {loading ? (
+                <Box display="flex" justifyContent="center" py={4}>
+                  <CircularProgress />
+                </Box>
+              ) : products.filter(p => p.pickupStatus).length === 0 ? (
+                <Paper sx={{ p: 4, textAlign: 'center' }}>
+                  <Typography variant="h6" color="text.secondary">
+                    אין הזמנות שנאספו
+                  </Typography>
+                </Paper>
+              ) : (
+                <Grid container spacing={{ xs: 1, sm: 2, md: 3 }}>
+                  {products.filter(p => p.pickupStatus).map(product => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
+                      <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        {product.picture && (
+                          <CardMedia
+                            component="img"
+                            height="200"
+                            image={product.picture}
+                            alt={product.name}
+                            sx={{ objectFit: 'cover' }}
+                          />
+                        )}
+                        <CardContent sx={{ flexGrow: 1 }}>
+                          <Typography variant="h6" component="div" gutterBottom>
+                            {product.name}
+                          </Typography>
+                          <Box sx={{ mb: 1 }}>
+                            <Chip label={getLabel(product.type, TYPE_LABELS)} size="small" color="primary" sx={{ ml: 0.5 }} />
+                            {product.country && <Chip label={getLabel(product.country, COUNTRY_LABELS)} size="small" variant="outlined" sx={{ ml: 0.5 }} />}
+                            <Chip label="נאסף" size="small" color="success" sx={{ ml: 0.5 }} />
+                          </Box>
+                          {product.wineType && (
+                            <Typography variant="body2" color="text.secondary">{getLabel(product.wineType, WINE_TYPE_LABELS)}</Typography>
+                          )}
+                          <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+                            ₪{product.price ? product.price.toFixed(2) : '0.00'}
+                          </Typography>
+                          {product.pickupRange && (
+                            <Typography variant="body2" sx={{ mt: 1 }}>
+                              טווח איסוף: {product.pickupRange}
+                            </Typography>
+                          )}
+                          {product.dateOfPurchase && (
+                            <Typography variant="body2" color="text.secondary">
+                              נרכש: {new Date(product.dateOfPurchase).toLocaleDateString('he-IL')}
+                            </Typography>
+                          )}
+                        </CardContent>
+                        <Divider />
+                        <CardActions sx={{ justifyContent: 'flex-end' }}>
+                          <IconButton size="small" onClick={() => handleEdit(product)} title="עריכה">
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton size="small" onClick={() => handleDelete(product)} color="error" title="מחיקה">
+                            <DeleteIcon />
+                          </IconButton>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </>
+          ) : (
+          <>
           {/* Stats Bar */}
           <Grid container spacing={1} sx={{ mb: 2 }}>
             <Grid item xs={6} sm={3}>
@@ -754,6 +838,8 @@ function App() {
               ))}
             </Grid>
           )}
+          </>
+          )}
         </Container>
 
         {showForm && (
@@ -868,12 +954,12 @@ function ProductForm({ product, onSubmit, onClose }) {
     grapeTypes: product?.grapeType || [],
     kosher: product?.kosher || false,
     url: product?.url || '',
-    tags: product?.tags?.join(', ') || '',
     liked: product?.liked || false,
     bought: product?.bought || false,
     picture: product?.picture || '',
     dateOfPurchase: product?.dateOfPurchase ? product.dateOfPurchase.split('T')[0] : '',
-    pickupDate: product?.pickupDate ? product.pickupDate.split('T')[0] : '',
+    pickupRangeStart: product?.pickupRange ? product.pickupRange.split(' - ')[0] : '',
+    pickupRangeEnd: product?.pickupRange ? product.pickupRange.split(' - ')[1] || product.pickupRange.split(' - ')[0] : '',
     pickupStatus: product?.pickupStatus || false,
     reviewed: product?.reviewed || false,
     interested: product?.interested || false,
@@ -930,17 +1016,27 @@ function ProductForm({ product, onSubmit, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Build pickup range string from months
+    let pickupRange = undefined;
+    if (formData.pickupRangeStart) {
+      pickupRange = formData.pickupRangeStart;
+      if (formData.pickupRangeEnd && formData.pickupRangeEnd !== formData.pickupRangeStart) {
+        pickupRange += ' - ' + formData.pickupRangeEnd;
+      }
+    }
+
     const data = {
       ...formData,
       price: parseFloat(formData.price) || 0,
       stock: parseInt(formData.stock) || 0,
       grapeType: formData.grapeTypes,
-      tags: formData.tags ? formData.tags.split(',').map(s => s.trim()).filter(Boolean) : [],
       dateOfPurchase: formData.dateOfPurchase || undefined,
-      pickupDate: formData.pickupDate || undefined,
+      pickupRange,
     };
 
     delete data.grapeTypes;
+    delete data.pickupRangeStart;
+    delete data.pickupRangeEnd;
 
     onSubmit(data);
   };
@@ -1114,16 +1210,21 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>תאריך איסוף</Typography>
-              <TextField
-                fullWidth
-                size="small"
-                name="pickupDate"
-                type="date"
-                value={formData.pickupDate}
-                onChange={handleChange}
-                inputProps={{ style: { textAlign: 'right' } }}
-              />
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>טווח איסוף</Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <FormControl fullWidth size="small">
+                  <Select name="pickupRangeStart" value={formData.pickupRangeStart} onChange={handleChange} displayEmpty>
+                    <MenuItem value="">מ-</MenuItem>
+                    {MONTHS.map(month => <MenuItem key={month} value={month}>{getLabel(month, MONTH_LABELS)}</MenuItem>)}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth size="small">
+                  <Select name="pickupRangeEnd" value={formData.pickupRangeEnd} onChange={handleChange} displayEmpty>
+                    <MenuItem value="">עד</MenuItem>
+                    {MONTHS.map(month => <MenuItem key={month} value={month}>{getLabel(month, MONTH_LABELS)}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Box>
             </Grid>
 
             <Grid item xs={12}>
@@ -1136,19 +1237,6 @@ function ProductForm({ product, onSubmit, onClose }) {
                 value={formData.url}
                 onChange={handleChange}
                 placeholder="https://..."
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>תגיות (מופרדות בפסיק)</Typography>
-              <TextField
-                fullWidth
-                size="small"
-                name="tags"
-                value={formData.tags}
-                onChange={handleChange}
-                placeholder="לדוגמה: מתנה, אירוע מיוחד"
-                inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
 
