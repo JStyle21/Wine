@@ -968,7 +968,7 @@ function ProductForm({ product, onSubmit, onClose }) {
         <DialogContent dividers sx={{ p: { xs: 1.5, sm: 2 } }}>
           <Grid container spacing={1.5}>
             <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>שם *</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>שם *</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1062,7 +1062,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             )}
 
             <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>תיאור</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>תיאור</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1075,7 +1075,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>מחיר (₪)</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>מחיר (₪)</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1087,7 +1087,7 @@ function ProductForm({ product, onSubmit, onClose }) {
               />
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>מלאי</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>מלאי</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1100,7 +1100,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>תאריך רכישה</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>תאריך רכישה</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1113,7 +1113,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>תאריך איסוף</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>תאריך איסוף</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1126,7 +1126,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>קישור למוצר</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>קישור למוצר</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1139,7 +1139,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>תגיות (מופרדות בפסיק)</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>תגיות (מופרדות בפסיק)</Typography>
               <TextField
                 fullWidth
                 size="small"
