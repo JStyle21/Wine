@@ -1010,9 +1010,8 @@ function ProductForm({ product, onSubmit, onClose }) {
               <>
                 <Grid item xs={12}>
                   <FormControl fullWidth size="small">
-                    <InputLabel sx={{ '&&.MuiInputLabel-shrink': { left: '234px !important', right: 'auto !important' } }}>סוג יין</InputLabel>
-                    <Select name="wineType" value={formData.wineType} label="סוג יין" onChange={handleChange}>
-                      <MenuItem value="">בחר...</MenuItem>
+                    <Select name="wineType" value={formData.wineType} onChange={handleChange} displayEmpty>
+                      <MenuItem value="">סוג יין</MenuItem>
                       {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, WINE_TYPE_LABELS)}</MenuItem>)}
                     </Select>
                   </FormControl>
@@ -1112,29 +1111,27 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>תאריך רכישה</Typography>
               <TextField
                 fullWidth
                 size="small"
-                label="תאריך רכישה"
                 name="dateOfPurchase"
                 type="date"
                 value={formData.dateOfPurchase}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true, sx: { '&&.MuiInputLabel-shrink': { left: '184px !important', right: 'auto !important' } } }}
                 inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
 
             <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>תאריך איסוף</Typography>
               <TextField
                 fullWidth
                 size="small"
-                label="תאריך איסוף"
                 name="pickupDate"
                 type="date"
                 value={formData.pickupDate}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true, sx: { '&&.MuiInputLabel-shrink': { left: '184px !important', right: 'auto !important' } } }}
                 inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
