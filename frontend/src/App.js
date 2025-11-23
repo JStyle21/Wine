@@ -1010,7 +1010,7 @@ function ProductForm({ product, onSubmit, onClose }) {
               <>
                 <Grid item xs={12}>
                   <FormControl fullWidth size="small">
-                    <InputLabel>סוג יין</InputLabel>
+                    <InputLabel sx={{ '&.MuiInputLabel-shrink': { left: '10px !important', right: 'auto !important' } }}>סוג יין</InputLabel>
                     <Select name="wineType" value={formData.wineType} label="סוג יין" onChange={handleChange}>
                       <MenuItem value="">בחר...</MenuItem>
                       {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, WINE_TYPE_LABELS)}</MenuItem>)}
