@@ -536,7 +536,7 @@ function App() {
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>סוג</InputLabel>
+                  <InputLabel sx={{ '&.MuiInputLabel-shrink': { left: '235px !important' } }}>סוג</InputLabel>
                   <Select value={filters.type} label="סוג" onChange={(e) => handleFilterChange('type', e.target.value)}>
                     <MenuItem value="">כל הסוגים</MenuItem>
                     {TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, TYPE_LABELS)}</MenuItem>)}
@@ -1120,7 +1120,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 type="date"
                 value={formData.dateOfPurchase}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true, sx: { '&.MuiInputLabel-shrink': { left: '185px !important' } } }}
                 inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
@@ -1134,7 +1134,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 type="date"
                 value={formData.pickupDate}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true, sx: { '&.MuiInputLabel-shrink': { left: '185px !important' } } }}
                 inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
