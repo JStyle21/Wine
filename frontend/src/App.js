@@ -153,7 +153,20 @@ const getTheme = (mode) => createTheme({
         root: {
           direction: 'rtl',
           textAlign: 'right',
-          justifyContent: 'flex-start',
+          justifyContent: 'flex-end',
+          '& .MuiListItemText-root': {
+            textAlign: 'right',
+          },
+        },
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          direction: 'rtl',
+        },
+        list: {
+          direction: 'rtl',
         },
       },
     },
@@ -509,6 +522,7 @@ function App() {
                   placeholder="חיפוש..."
                   value={filters.search}
                   onChange={(e) => handleFilterChange('search', e.target.value)}
+                  inputProps={{ style: { textAlign: 'right' } }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -1023,6 +1037,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 </Grid>
                 <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center' }}>
                   <FormControlLabel
+                    labelPlacement="start"
                     control={<Checkbox name="kosher" checked={formData.kosher} onChange={handleChange} size="small" />}
                     label="כשר"
                   />
@@ -1050,7 +1065,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                       </Box>
                     </Box>
                   )}
-                  <Box sx={{ display: 'flex', gap: 1, mb: 1, flexDirection: 'row-reverse' }}>
+                  <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
                     <Button variant="outlined" color="primary" size="small" onClick={handleAddNewGrapeType} disabled={!newGrapeType.trim()}>
                       הוסף
                     </Button>
@@ -1133,7 +1148,7 @@ function ProductForm({ product, onSubmit, onClose }) {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 fullWidth
                 size="small"
@@ -1143,6 +1158,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 value={formData.dateOfPurchase}
                 onChange={handleChange}
                 InputLabelProps={{ shrink: true }}
+                inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
 
@@ -1209,7 +1225,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'flex-start' }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'flex-end' }}>
                 <FormControlLabel
                   labelPlacement="start"
                   control={<Checkbox name="liked" checked={formData.liked} onChange={handleChange} size="small" />}
