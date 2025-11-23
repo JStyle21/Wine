@@ -536,8 +536,7 @@ function App() {
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>סוג</InputLabel>
-                  <Select value={filters.type} label="סוג" onChange={(e) => handleFilterChange('type', e.target.value)}>
+                  <Select value={filters.type} onChange={(e) => handleFilterChange('type', e.target.value)} displayEmpty>
                     <MenuItem value="">כל הסוגים</MenuItem>
                     {TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, TYPE_LABELS)}</MenuItem>)}
                   </Select>
@@ -545,8 +544,7 @@ function App() {
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>ארץ</InputLabel>
-                  <Select value={filters.country} label="ארץ" onChange={(e) => handleFilterChange('country', e.target.value)}>
+                  <Select value={filters.country} onChange={(e) => handleFilterChange('country', e.target.value)} displayEmpty>
                     <MenuItem value="">כל הארצות</MenuItem>
                     {COUNTRIES.map(country => <MenuItem key={country} value={country}>{getLabel(country, COUNTRY_LABELS)}</MenuItem>)}
                   </Select>
@@ -555,8 +553,7 @@ function App() {
               {filters.type === 'Wine' && (
                 <Grid item xs={6} sm={3} md={2}>
                   <FormControl fullWidth size="small">
-                    <InputLabel>סוג יין</InputLabel>
-                    <Select value={filters.wineType} label="סוג יין" onChange={(e) => handleFilterChange('wineType', e.target.value)}>
+                    <Select value={filters.wineType} onChange={(e) => handleFilterChange('wineType', e.target.value)} displayEmpty>
                       <MenuItem value="">כל סוגי היין</MenuItem>
                       {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, WINE_TYPE_LABELS)}</MenuItem>)}
                     </Select>
@@ -565,8 +562,7 @@ function App() {
               )}
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>מועדפים</InputLabel>
-                  <Select value={filters.fav} label="מועדפים" onChange={(e) => handleFilterChange('fav', e.target.value)}>
+                  <Select value={filters.fav} onChange={(e) => handleFilterChange('fav', e.target.value)} displayEmpty>
                     <MenuItem value="">כל הפריטים</MenuItem>
                     <MenuItem value="true">מועדפים בלבד</MenuItem>
                   </Select>
@@ -574,8 +570,7 @@ function App() {
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>סטטוס</InputLabel>
-                  <Select value={filters.purchased} label="סטטוס" onChange={(e) => handleFilterChange('purchased', e.target.value)}>
+                  <Select value={filters.purchased} onChange={(e) => handleFilterChange('purchased', e.target.value)} displayEmpty>
                     <MenuItem value="">כל הסטטוסים</MenuItem>
                     <MenuItem value="true">נרכש</MenuItem>
                     <MenuItem value="false">רשימת משאלות</MenuItem>
@@ -584,9 +579,8 @@ function App() {
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>נסקר</InputLabel>
-                  <Select value={filters.reviewed} label="נסקר" onChange={(e) => handleFilterChange('reviewed', e.target.value)}>
-                    <MenuItem value="">הכל</MenuItem>
+                  <Select value={filters.reviewed} onChange={(e) => handleFilterChange('reviewed', e.target.value)} displayEmpty>
+                    <MenuItem value="">נסקר</MenuItem>
                     <MenuItem value="true">נסקר</MenuItem>
                     <MenuItem value="false">לא נסקר</MenuItem>
                   </Select>
@@ -594,17 +588,15 @@ function App() {
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>מעוניין</InputLabel>
-                  <Select value={filters.interested} label="מעוניין" onChange={(e) => handleFilterChange('interested', e.target.value)}>
-                    <MenuItem value="">הכל</MenuItem>
+                  <Select value={filters.interested} onChange={(e) => handleFilterChange('interested', e.target.value)} displayEmpty>
+                    <MenuItem value="">מעוניין</MenuItem>
                     <MenuItem value="true">מעוניין</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>מיון לפי</InputLabel>
-                  <Select value={filters.sortBy} label="מיון לפי" onChange={(e) => handleFilterChange('sortBy', e.target.value)}>
+                  <Select value={filters.sortBy} onChange={(e) => handleFilterChange('sortBy', e.target.value)} displayEmpty>
                     <MenuItem value="createdAt">תאריך הוספה</MenuItem>
                     <MenuItem value="name">שם</MenuItem>
                     <MenuItem value="price">מחיר</MenuItem>
@@ -614,8 +606,7 @@ function App() {
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel>סדר</InputLabel>
-                  <Select value={filters.order} label="סדר" onChange={(e) => handleFilterChange('order', e.target.value)}>
+                  <Select value={filters.order} onChange={(e) => handleFilterChange('order', e.target.value)} displayEmpty>
                     <MenuItem value="desc">יורד</MenuItem>
                     <MenuItem value="asc">עולה</MenuItem>
                   </Select>
@@ -977,7 +968,7 @@ function ProductForm({ product, onSubmit, onClose }) {
         <DialogContent dividers sx={{ p: { xs: 1.5, sm: 2 } }}>
           <Grid container spacing={1.5}>
             <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>שם *</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>שם *</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1071,7 +1062,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             )}
 
             <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>תיאור</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>תיאור</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1084,7 +1075,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>מחיר (₪)</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>מחיר (₪)</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1096,7 +1087,7 @@ function ProductForm({ product, onSubmit, onClose }) {
               />
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>מלאי</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>מלאי</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1109,7 +1100,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>תאריך רכישה</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>תאריך רכישה</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1122,7 +1113,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>תאריך איסוף</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>תאריך איסוף</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1135,7 +1126,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>קישור למוצר</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>קישור למוצר</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1148,7 +1139,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>תגיות (מופרדות בפסיק)</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'right' }}>תגיות (מופרדות בפסיק)</Typography>
               <TextField
                 fullWidth
                 size="small"
