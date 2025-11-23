@@ -1006,11 +1006,11 @@ function ProductForm({ product, onSubmit, onClose }) {
                   </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                  <Typography variant="body2" color="text.secondary" gutterBottom sx={{ textAlign: 'left' }}>
                     זני ענבים
                   </Typography>
                   {availableGrapeTypes.length > 0 && (
-                    <Box sx={{ mb: 1, textAlign: 'right' }}>
+                    <Box sx={{ mb: 1, textAlign: 'left' }}>
                       <Typography variant="caption" color="text.secondary">
                         לחץ לבחירה:
                       </Typography>
@@ -1039,11 +1039,12 @@ function ProductForm({ product, onSubmit, onClose }) {
                       onChange={(e) => setNewGrapeType(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddNewGrapeType())}
                       sx={{ flexGrow: 1 }}
+                      inputProps={{ style: { textAlign: 'right' } }}
                     />
                   </Box>
                   {formData.grapeTypes.length > 0 && (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, textAlign: 'right' }}>
-                      <Typography variant="caption" color="text.secondary" sx={{ width: '100%', textAlign: 'right' }}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, textAlign: 'left' }}>
+                      <Typography variant="caption" color="text.secondary" sx={{ width: '100%', textAlign: 'left' }}>
                         נבחרו:
                       </Typography>
                       {formData.grapeTypes.map(grape => (
@@ -1135,6 +1136,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 value={formData.url}
                 onChange={handleChange}
                 placeholder="https://..."
+                inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
 
@@ -1147,6 +1149,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 value={formData.tags}
                 onChange={handleChange}
                 placeholder="לדוגמה: מתנה, אירוע מיוחד"
+                inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
 
