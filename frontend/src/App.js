@@ -98,16 +98,16 @@ const getTheme = (mode) => createTheme({
           right: 'auto !important',
           transformOrigin: 'top left !important',
           '&.MuiInputLabel-shrink': {
-            left: '10px !important',
-            right: 'auto !important',
+            left: '10px',
+            right: 'auto',
           },
         },
         outlined: {
           left: '28px !important',
           right: 'auto !important',
           '&.MuiInputLabel-shrink': {
-            left: '10px !important',
-            right: 'auto !important',
+            left: '10px',
+            right: 'auto',
           },
         },
       },
