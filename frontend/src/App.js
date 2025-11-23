@@ -98,7 +98,7 @@ const getTheme = (mode) => createTheme({
           right: 'auto !important',
           transformOrigin: 'top left !important',
           '&.MuiInputLabel-shrink': {
-            left: '18px !important',
+            left: '10px !important',
             right: 'auto !important',
           },
         },
@@ -106,7 +106,7 @@ const getTheme = (mode) => createTheme({
           left: '28px !important',
           right: 'auto !important',
           '&.MuiInputLabel-shrink': {
-            left: '18px !important',
+            left: '10px !important',
             right: 'auto !important',
           },
         },
@@ -444,17 +444,19 @@ function App() {
                 <Typography variant="h6" component="div" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   מעקב יינות ומשקאות
                 </Typography>
-                <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                  | שלום, {user.username}
-                </Typography>
-                <IconButton color="inherit" onClick={toggleDarkMode} title={mode === 'light' ? 'מצב כהה' : 'מצב בהיר'} size="small">
-                  {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-                </IconButton>
                 <Box sx={{ flexGrow: 1 }} />
                 <Button color="inherit" onClick={handleLogout} size="small" sx={{ minWidth: 'auto', px: { xs: 1, sm: 2 } }}>
                   <LogoutIcon sx={{ display: { xs: 'block', sm: 'none' } }} />
                   <Box component="span" sx={{ display: { xs: 'none', sm: 'block' } }}>יציאה</Box>
                 </Button>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 1 }}>
+                <Typography variant="body2">
+                  שלום, {user.username}
+                </Typography>
+                <IconButton color="inherit" onClick={toggleDarkMode} title={mode === 'light' ? 'מצב כהה' : 'מצב בהיר'} size="small">
+                  {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+                </IconButton>
               </Box>
               {/* Second row: Add button */}
               <Box sx={{ width: '100%' }}>
@@ -874,15 +876,13 @@ function ProductForm({ product, onSubmit, onClose }) {
     wineType: product?.wineType || '',
     grapeTypes: product?.grapeType || [],
     kosher: product?.kosher || false,
-    alcoholPercent: product?.alcoholPercent || '',
     url: product?.url || '',
     tags: product?.tags?.join(', ') || '',
     liked: product?.liked || false,
     bought: product?.bought || false,
     picture: product?.picture || '',
     dateOfPurchase: product?.dateOfPurchase ? product.dateOfPurchase.split('T')[0] : '',
-    pickupRangeStart: '',
-    pickupRangeEnd: '',
+    pickupDate: product?.pickupDate ? product.pickupDate.split('T')[0] : '',
     pickupStatus: product?.pickupStatus || false,
     reviewed: product?.reviewed || false,
     interested: product?.interested || false,
@@ -897,18 +897,6 @@ function ProductForm({ product, onSubmit, onClose }) {
     api.getGrapeTypes().then(setAvailableGrapeTypes).catch(() => {});
   }, []);
 
-  useEffect(() => {
-    if (product?.pickupRange) {
-      const parts = product.pickupRange.split('-');
-      if (parts.length === 2) {
-        setFormData(prev => ({
-          ...prev,
-          pickupRangeStart: parts[0].trim(),
-          pickupRangeEnd: parts[1].trim(),
-        }));
-      }
-    }
-  }, [product]);
 
   const handleGrapeTypeToggle = (grape) => {
     setFormData(prev => ({
@@ -950,24 +938,18 @@ function ProductForm({ product, onSubmit, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const pickupRange = formData.pickupRangeStart && formData.pickupRangeEnd
-      ? `${formData.pickupRangeStart}-${formData.pickupRangeEnd}`
-      : '';
 
     const data = {
       ...formData,
       price: parseFloat(formData.price) || 0,
-      alcoholPercent: parseFloat(formData.alcoholPercent) || 0,
       stock: parseInt(formData.stock) || 0,
       grapeType: formData.grapeTypes,
       tags: formData.tags ? formData.tags.split(',').map(s => s.trim()).filter(Boolean) : [],
-      pickupRange,
       dateOfPurchase: formData.dateOfPurchase || undefined,
+      pickupDate: formData.pickupDate || undefined,
     };
 
     delete data.grapeTypes;
-    delete data.pickupRangeStart;
-    delete data.pickupRangeEnd;
 
     onSubmit(data);
   };
@@ -1026,7 +1008,7 @@ function ProductForm({ product, onSubmit, onClose }) {
 
             {formData.type === 'Wine' && (
               <>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <FormControl fullWidth size="small">
                     <InputLabel>סוג יין</InputLabel>
                     <Select name="wineType" value={formData.wineType} label="סוג יין" onChange={handleChange}>
@@ -1034,13 +1016,6 @@ function ProductForm({ product, onSubmit, onClose }) {
                       {WINE_TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, WINE_TYPE_LABELS)}</MenuItem>)}
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center' }}>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={<Checkbox name="kosher" checked={formData.kosher} onChange={handleChange} size="small" />}
-                    label="כשר"
-                  />
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -1123,19 +1098,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                 inputProps={{ step: 0.01, min: 0 }}
               />
             </Grid>
-            <Grid item xs={4}>
-              <TextField
-                fullWidth
-                size="small"
-                label="אלכוהול %"
-                name="alcoholPercent"
-                type="number"
-                value={formData.alcoholPercent}
-                onChange={handleChange}
-                inputProps={{ step: 0.1, min: 0, max: 100 }}
-              />
-            </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <TextField
                 fullWidth
                 size="small"
@@ -1163,22 +1126,17 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
-              <FormControl fullWidth size="small">
-                <InputLabel>איסוף מ-</InputLabel>
-                <Select name="pickupRangeStart" value={formData.pickupRangeStart} label="איסוף מ-" onChange={handleChange}>
-                  <MenuItem value="">בחר...</MenuItem>
-                  {MONTHS.map(month => <MenuItem key={month} value={month}>{getLabel(month, MONTH_LABELS)}</MenuItem>)}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-              <FormControl fullWidth size="small">
-                <InputLabel>עד</InputLabel>
-                <Select name="pickupRangeEnd" value={formData.pickupRangeEnd} label="עד" onChange={handleChange}>
-                  <MenuItem value="">בחר...</MenuItem>
-                  {MONTHS.map(month => <MenuItem key={month} value={month}>{getLabel(month, MONTH_LABELS)}</MenuItem>)}
-                </Select>
-              </FormControl>
+              <TextField
+                fullWidth
+                size="small"
+                label="תאריך איסוף"
+                name="pickupDate"
+                type="date"
+                value={formData.pickupDate}
+                onChange={handleChange}
+                InputLabelProps={{ shrink: true }}
+                inputProps={{ style: { textAlign: 'right' } }}
+              />
             </Grid>
 
             <Grid item xs={12}>
@@ -1254,6 +1212,12 @@ function ProductForm({ product, onSubmit, onClose }) {
                   labelPlacement="start"
                   control={<Checkbox name="interested" checked={formData.interested} onChange={handleChange} size="small" />}
                   label={<Typography variant="body2">מעוניין</Typography>}
+                  sx={{ ml: 0, mr: 0 }}
+                />
+                <FormControlLabel
+                  labelPlacement="start"
+                  control={<Checkbox name="kosher" checked={formData.kosher} onChange={handleChange} size="small" />}
+                  label={<Typography variant="body2">כשר</Typography>}
                   sx={{ ml: 0, mr: 0 }}
                 />
               </Box>
