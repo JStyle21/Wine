@@ -968,7 +968,7 @@ function ProductForm({ product, onSubmit, onClose }) {
         <DialogContent dividers sx={{ p: { xs: 1.5, sm: 2 } }}>
           <Grid container spacing={1.5}>
             <Grid item xs={12}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>שם *</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>שם</Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -1076,7 +1076,7 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={6}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>מחיר (₪)</Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block', textAlign: 'left' }}>(₪) מחיר</Typography>
               <TextField
                 fullWidth
                 size="small"
