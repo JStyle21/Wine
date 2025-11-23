@@ -977,10 +977,10 @@ function ProductForm({ product, onSubmit, onClose }) {
         <DialogContent dividers sx={{ p: { xs: 1.5, sm: 2 } }}>
           <Grid container spacing={1.5}>
             <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>שם *</Typography>
               <TextField
                 fullWidth
                 size="small"
-                label="שם"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
@@ -990,17 +990,15 @@ function ProductForm({ product, onSubmit, onClose }) {
 
             <Grid item xs={6}>
               <FormControl fullWidth size="small">
-                <InputLabel>סוג</InputLabel>
-                <Select name="type" value={formData.type} label="סוג" onChange={handleChange}>
+                <Select name="type" value={formData.type} onChange={handleChange} displayEmpty>
                   {TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, TYPE_LABELS)}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={6}>
               <FormControl fullWidth size="small">
-                <InputLabel>ארץ</InputLabel>
-                <Select name="country" value={formData.country} label="ארץ" onChange={handleChange}>
-                  <MenuItem value="">בחר...</MenuItem>
+                <Select name="country" value={formData.country} onChange={handleChange} displayEmpty>
+                  <MenuItem value="">ארץ</MenuItem>
                   {COUNTRIES.map(country => <MenuItem key={country} value={country}>{getLabel(country, COUNTRY_LABELS)}</MenuItem>)}
                 </Select>
               </FormControl>
@@ -1045,7 +1043,7 @@ function ProductForm({ product, onSubmit, onClose }) {
                     </Button>
                     <TextField
                       size="small"
-                      label="הוסף זן חדש"
+                      placeholder="הוסף זן חדש"
                       value={newGrapeType}
                       onChange={(e) => setNewGrapeType(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddNewGrapeType())}
@@ -1073,10 +1071,10 @@ function ProductForm({ product, onSubmit, onClose }) {
             )}
 
             <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>תיאור</Typography>
               <TextField
                 fullWidth
                 size="small"
-                label="תיאור"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -1085,11 +1083,11 @@ function ProductForm({ product, onSubmit, onClose }) {
               />
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>מחיר (₪)</Typography>
               <TextField
                 fullWidth
                 size="small"
-                label="מחיר (₪)"
                 name="price"
                 type="number"
                 value={formData.price}
@@ -1098,10 +1096,10 @@ function ProductForm({ product, onSubmit, onClose }) {
               />
             </Grid>
             <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>מלאי</Typography>
               <TextField
                 fullWidth
                 size="small"
-                label="מלאי"
                 name="stock"
                 type="number"
                 value={formData.stock}
@@ -1137,10 +1135,10 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>קישור למוצר</Typography>
               <TextField
                 fullWidth
                 size="small"
-                label="קישור למוצר"
                 name="url"
                 type="url"
                 value={formData.url}
@@ -1150,10 +1148,10 @@ function ProductForm({ product, onSubmit, onClose }) {
             </Grid>
 
             <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>תגיות (מופרדות בפסיק)</Typography>
               <TextField
                 fullWidth
                 size="small"
-                label="תגיות (מופרדות בפסיק)"
                 name="tags"
                 value={formData.tags}
                 onChange={handleChange}
