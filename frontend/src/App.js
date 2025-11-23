@@ -1136,7 +1136,6 @@ function ProductForm({ product, onSubmit, onClose }) {
                 value={formData.url}
                 onChange={handleChange}
                 placeholder="https://..."
-                inputProps={{ style: { textAlign: 'right' } }}
               />
             </Grid>
 
