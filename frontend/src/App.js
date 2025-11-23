@@ -536,10 +536,7 @@ function App() {
               </Grid>
               <Grid item xs={6} sm={3} md={2}>
                 <FormControl fullWidth size="small">
-                  <InputLabel sx={{
-                    '&.MuiInputLabel-shrink': { left: '235px !important', right: 'auto !important' },
-                    '&.MuiFormLabel-filled': { left: '235px !important', right: 'auto !important' }
-                  }}>סוג</InputLabel>
+                  <InputLabel>סוג</InputLabel>
                   <Select value={filters.type} label="סוג" onChange={(e) => handleFilterChange('type', e.target.value)}>
                     <MenuItem value="">כל הסוגים</MenuItem>
                     {TYPES.map(type => <MenuItem key={type} value={type}>{getLabel(type, TYPE_LABELS)}</MenuItem>)}
